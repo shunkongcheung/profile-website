@@ -14,25 +14,25 @@ interface CoverProps {
 
 const blender = keyframes`
 0% { transform: translateX(0%) scale(100%, 100%)};
-5% { transform: translateX(-150%) scale(100%, 100%)};
-10% { transform: translateX(-150%) scale(0, 100%)};
+10% { transform: translateX(-150%) scale(100%, 100%)};
+20% { transform: translateX(-150%) scale(0, 100%)};
 100% { transform: translateX(-150%) scale(0, 100%)};
 `;
 
 const lcover = keyframes`
 0% { transform: scaleX(0%) };
-5% { transform: scaleX(80%)};
+10% { transform: scaleX(80%)};
 100% { transform: scaleX(100%)};
 `;
 
 const rcover = keyframes`
 0% { transform: scaleX(0%) };
-5% { transform: scaleX(60%) };
+10% { transform: scaleX(60%) };
 100% { transform: scaleX(55%)};
 `;
 
 const image = keyframes`
-5% { transform: translateX(0%)};
+10% { transform: translateX(0%)};
 100% { transform: translateX(-4%)};
 `;
 
