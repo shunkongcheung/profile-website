@@ -10,6 +10,7 @@ interface BlenderCardProps {
 interface FlippyImageProps {
   delay?: number;
   duration?: number;
+  isStart: boolean;
   imgSrc: string;
 }
 
@@ -28,7 +29,7 @@ const Container = styled.div`
   position: relative;
 `;
 
-const Image = styled.div<{ imgSrc: string }>`
+const MyImage = styled.div<{ imgSrc: string }>`
   width: 100%;
   height: 100%;
   background: url(${(props) => props.imgSrc});
@@ -84,11 +85,13 @@ const BlenderBack = styled.div`
 const FlippyImage: React.FC<FlippyImageProps> = ({
   delay = 0.3,
   duration = 1,
+  isStart,
   imgSrc,
 }) => {
+  if (!isStart) return <></>;
   return (
     <Container>
-      <Image imgSrc={imgSrc} />
+      <MyImage imgSrc={imgSrc} />
       <BlenderContainer>
         {Array.from({ length: 5 }).map((_, idx) => (
           <BlenderCard

@@ -4,6 +4,7 @@ import styled, { keyframes } from "styled-components";
 interface ThreeDImageProps {
   delay?: number;
   duration?: number;
+  isStart: boolean;
   imgSrc: string;
 }
 
@@ -84,8 +85,10 @@ const ImageMain = styled.div<ImgProps>`
 const ThreeDImage: React.FC<ThreeDImageProps> = ({
   delay = 0.4,
   duration = 1,
+  isStart,
   imgSrc,
 }) => {
+  if (!isStart) return <></>;
   return (
     <Container>
       <ItemContainer left={20} scale={0.8}>
