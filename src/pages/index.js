@@ -1,4 +1,5 @@
 import Head from 'next/head'
+import Home from '../containers/Home'
 
 export default function HomePage() {
   return (
@@ -6,7 +7,7 @@ export default function HomePage() {
       <Head>
         <title> Welcome</title>
       </Head>
-      <div>hello world</div>
+      <Home />
     </>
   )
 }
