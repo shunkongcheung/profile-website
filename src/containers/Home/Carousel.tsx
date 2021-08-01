@@ -39,7 +39,7 @@ const Carousel: React.FC<CarouselProps> = ({
   isInfinite = false,
   isVertical = false,
 }) => {
-  const [state, setState] = React.useState({ idx: 0 });
+  const [state, setState] = React.useState({ idx: -1 });
 
   const count = children?.length || 1;
   const refs = React.useRef(Array.from({ length: count }));
@@ -98,7 +98,10 @@ const Carousel: React.FC<CarouselProps> = ({
           <ItemContainer
             key={`CarouselItem-${idx}`}
             {...itemSizes}
-            ref={(ref) => (refs.current[idx] = ref)}
+            ref={(ref) => {
+              refs.current[idx] = ref;
+              setState((o) => (o.idx !== -1 ? o : { idx: 0 }));
+            }}
           >
             {item}
           </ItemContainer>
