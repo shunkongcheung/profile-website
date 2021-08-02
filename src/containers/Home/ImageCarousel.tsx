@@ -1,10 +1,10 @@
 import React, { memo } from "react";
 import styled from "styled-components";
 
+import { Carousel } from "../../components";
 import { useWindowSize } from "../../hooks";
 
 import BlendImage from "./BlendImage";
-import Carousel from "./Carousel";
 import FlippyImage from "./FlippyImage";
 import ThreeDImage from "./ThreeDImage";
 
@@ -50,20 +50,12 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({ isStart }) => {
     return byHeight;
   }, [windowSize]);
 
-  const uncontrol = React.useMemo(
-    () => ({
-      interval: 3000,
-      handleScroll: setIdx,
-    }),
-    [setIdx]
-  );
-
   if (!isStart) return <></>;
   return (
     <>
       <Container>
         <ImageContainer {...sizes}>
-          <Carousel uncontrol={uncontrol}>
+          <Carousel uncontrol={{ interval: 3000 }} handleScroll={setIdx}>
             <ThreeDImage
               imgSrc={"/home-second-image.jpg"}
               isStart={isStart && idx === 0}
