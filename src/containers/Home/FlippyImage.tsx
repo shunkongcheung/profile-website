@@ -27,6 +27,9 @@ const Container = styled.div`
   width: 100%;
   height: 100%;
   position: relative;
+
+  overflow: hidden;
+  border-radius: 5px;
 `;
 
 const MyImage = styled.div<{ imgSrc: string }>`
