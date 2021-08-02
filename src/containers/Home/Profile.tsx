@@ -28,17 +28,22 @@ const Container = styled.div`
 
 const ContentContainer = styled.div`
   display: flex;
-  margin-top: calc(${BAR_HEIGHT}vh + ${IMG_RADIUS + 3}rem);
+  margin-top: calc(${BAR_HEIGHT}vh + ${IMG_RADIUS + 7}rem);
   width: 100%;
 `;
 
 const Content = styled.div`
   width: 1080px;
-  max-width: 80%;
+  max-width: 90%;
   margin-left: auto;
   margin-right: auto;
   display: flex;
   flex-direction: column;
+`;
+
+const Heading = styled.h3`
+  margin-top: 3rem;
+  font-size: 2rem;
 `;
 
 const TagsContainer = styled.div`
@@ -139,7 +144,7 @@ const Profile: React.FC<ProfileProps> = ({ isRender, lang }) => {
             ))}
           </TagsContainer>
           <ProfileSocial lang={lang} />
-          {!!experiences.length && <h2>{Titles.experience[lang]}</h2>}
+          {!!experiences.length && <Heading>{Titles.experience[lang]}</Heading>}
           {experiences.map((experience, idx) => (
             <ProfileExperienceItem
               key={`ProfileExperienceItem-${experience.title}-${experience.company}-${idx}`}
@@ -153,9 +158,10 @@ const Profile: React.FC<ProfileProps> = ({ isRender, lang }) => {
               title={experience.title}
               company={experience.company}
               thumbnail={experience.thumbnail}
+              isLast={idx === experiences.length - 1}
             />
           ))}
-          {!!educations.length && <h2>{Titles.education[lang]}</h2>}
+          {!!educations.length && <Heading>{Titles.education[lang]}</Heading>}
           {educations.map((education, idx) => (
             <ProfileExperienceItem
               key={`ProfileExperienceItem-${education.title}-${education.company}-${idx}`}
@@ -169,6 +175,7 @@ const Profile: React.FC<ProfileProps> = ({ isRender, lang }) => {
               title={education.title}
               company={education.company}
               thumbnail={education.thumbnail}
+              isLast={idx === educations.length - 1}
             />
           ))}
         </Content>
