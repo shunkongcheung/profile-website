@@ -10,6 +10,7 @@ interface ProfileExperienceItemProps {
   dateFrom: Moment;
   dateTo: Moment;
   isPartTime?: boolean;
+  isLast: boolean;
   lang: Lang;
   link?: string;
   title: string;
@@ -22,12 +23,13 @@ const Company = styled.h4`
   margin: 0.3rem 0;
 `;
 
-const Container = styled.div`
+const Container = styled.div<{ borderWidth: number }>`
   display: flex;
   padding: 10px 0;
   border 0px solid #ddd;
-  border-bottom-width: 1px;
+  border-bottom-width: ${(props) => props.borderWidth}px;
   flex-wrap: wrap;
+  margin-bottom: 1.5rem;
 
 `;
 
@@ -36,7 +38,9 @@ const Content = styled.div`
   max-width: 100%;
 `;
 
-const DescList = styled.ul``;
+const DescList = styled.ul`
+  padding-left: 17px;
+`;
 
 const DescItem = styled.li`
   margin-bottom: 0.5rem;
@@ -101,6 +105,7 @@ const ProfileExperienceItem: React.FC<ProfileExperienceItemProps> = ({
   dateTo,
   lang,
   isPartTime,
+  isLast,
   link,
   tags,
   title,
@@ -112,7 +117,7 @@ const ProfileExperienceItem: React.FC<ProfileExperienceItemProps> = ({
 
   const toStr = isToday ? Trans.present[lang] : dateTo.format("MMM YY");
   return (
-    <Container>
+    <Container borderWidth={isLast ? 0 : 1}>
       <Thumbnail src={thumbnail} />
       <Content>
         <Title>
