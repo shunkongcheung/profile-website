@@ -4,13 +4,7 @@ interface State {
   idx: number;
 }
 
-type HandleScroll = (id: number) => any;
-
-function useCarouselIdx(
-  handleScroll: HandleScroll,
-  uncontrol: State,
-  control?: State
-) {
+function useCarouselIdx(uncontrol: State, control?: State) {
   // uncontrol is the state return by useCarouselUncontrolled, it is always true
   // control is the state provided by props, it can be undefined
   // choose currId base on whether control is provided
@@ -27,10 +21,6 @@ function useCarouselIdx(
     if (!!control) return;
     setCurIdx(uncontrol.idx);
   }, [control, uncontrol.idx]);
-
-  useEffect(() => {
-    handleScroll(currIdx);
-  }, [currIdx, handleScroll]);
 
   return currIdx;
 }
