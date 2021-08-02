@@ -37,7 +37,11 @@ const Content = styled.div`
 
   display: flex;
   flex-direction: column;
-  padding: 5rem;
+  padding: 2rem;
+
+  @media (min-width: 600px) {
+    padding: 5rem;
+  }
 `;
 
 const Background = styled.div`
@@ -61,8 +65,6 @@ const Filter = styled.div`
 `;
 
 const Title = styled.h1`
-  font-size: 4rem;
-  width: 30rem;
   text-wrap: wrap;
   letter-spacing: 3px;
   text-align: end;
@@ -72,6 +74,13 @@ const Title = styled.h1`
   animation: ${fadeIn} 0.5s ease-in forwards;
 
   margin: auto 0 auto auto;
+
+  font-size: 3rem;
+  width: 20rem;
+  @media (min-width: 600px) {
+    font-size: 4rem;
+    width: 30rem;
+  }
 `;
 
 const NextContainer = styled.div`
