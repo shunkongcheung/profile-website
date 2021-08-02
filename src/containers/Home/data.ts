@@ -226,7 +226,7 @@ const Experiences: Array<ExpItem> = [
     isPartTime: true,
     title: "Summer Intern, Legal",
     company: "T.K.Tsui & Co.",
-    thumbnail: "/home-experience-blank.jpg",
+    thumbnail: "/image-placeholder.png",
   },
   {
     descriptions: [
@@ -238,9 +238,9 @@ const Experiences: Array<ExpItem> = [
     link: "https://www3.ha.org.hk/ndh/index_e.asp",
     tags: [Tags.hongKong],
     isPartTime: true,
-    title: "Summer Intern, Legal",
-    company: "T.K.Tsui & Co.",
-    thumbnail: "/home-experience-blank.jpg",
+    title: "Volunteer",
+    company: "Hong Kong North District Hospital",
+    thumbnail: "/image-placeholder.png",
   },
 ];
 
