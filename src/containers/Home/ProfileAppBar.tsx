@@ -5,6 +5,7 @@ import { I18N, Lang } from "../../types";
 
 interface ProfileAppBarProps {
   scale: number;
+  isRender: boolean;
   lang: Lang;
   barHeight: number;
   imgRadius: number;
@@ -16,14 +17,20 @@ const Border = styled.div`
   background: #777;
   margin-bottom: 0.2rem;
 `;
-const Container = styled.div<{ scale: number; barHeight: number }>`
+const Container = styled.div<{
+  scale: number;
+  barHeight: number;
+  isRender: boolean;
+}>`
   width: 100%;
   height: ${(props) => props.scale * props.barHeight}%;
   background: ${(props) => props.theme.colors.primary[500]};
 
   transform-origin: 0 0;
-  position: fixed;
-  z-index: 1;
+  opacity: 0;
+  ${(props) => !!props.isRender && "position: fixed;"}
+  ${(props) => !!props.isRender && "opacity: 1;"}
+  transition: opacity 0.5s ease-in;
   top: 0;
 `;
 
@@ -96,12 +103,17 @@ const TRANS: { [x: string]: I18N } = {
 const ProfileAppBar: React.FC<ProfileAppBarProps> = ({
   barHeight,
   imgRadius,
+  isRender,
   lang,
   scale,
 }) => {
   const contentScale = Math.max(1 - 2 * scale, 0.3);
   return (
-    <Container scale={Math.max(1 - scale * 1.2, 0.4)} barHeight={barHeight}>
+    <Container
+      scale={Math.max(1 - scale * 1.2, 0.4)}
+      barHeight={barHeight}
+      isRender={isRender}
+    >
       <Content scale={contentScale}>
         <MyImage imgRadius={imgRadius} />
         <Name>{TRANS.name[lang]}</Name>
