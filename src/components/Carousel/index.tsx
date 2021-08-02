@@ -38,8 +38,6 @@ const Slider = styled.div<{
 const ItemContainer = styled.div<{ width: number; height: number }>`
   width: ${(props) => props.width * 100}%;
   height: ${(props) => props.height * 100}%;
-  padding-left: 5px;
-  padding-right: 5px;
 `;
 
 const Carousel: React.FC<CarouselProps> = ({
