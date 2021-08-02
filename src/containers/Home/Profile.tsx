@@ -138,7 +138,7 @@ const Profile: React.FC<ProfileProps> = ({ isRender, lang }) => {
               </ProfileTag>
             ))}
           </TagsContainer>
-          <ProfileSocial/>
+          <ProfileSocial lang={lang} />
           {!!experiences.length && <h2>{Titles.experience[lang]}</h2>}
           {experiences.map((experience, idx) => (
             <ProfileExperienceItem
