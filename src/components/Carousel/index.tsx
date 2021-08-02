@@ -1,25 +1,19 @@
 import React, { memo, ReactNode } from "react";
 import styled from "styled-components";
 
-import useCarouselIdx from "./useCarouselIdx";
 import useCarouselScroll from "./useCarouselScroll";
-import useCarouselUncontrolled from "./useCarouselUncontrolled";
+import useCarouselScrollEvt from "./useCarouselScrollEvt";
 
 interface CarouselProps {
   children: Array<ReactNode>;
-  control?: Control;
+  control: Control;
   isVertical?: boolean;
-  uncontrol?: UnControl;
   handleScroll?: (idx: number) => any;
   scrollable?: boolean;
 }
 
 interface Control {
   idx: number;
-}
-
-interface UnControl {
-  interval: number;
 }
 
 const Container = styled.div<{ scrollable: boolean; isVertical: boolean }>`
@@ -51,7 +45,6 @@ const ItemContainer = styled.div<{ width: number; height: number }>`
 const Carousel: React.FC<CarouselProps> = ({
   children,
   control,
-  uncontrol,
   handleScroll = () => {},
   isVertical = false,
   scrollable = false,
@@ -59,13 +52,14 @@ const Carousel: React.FC<CarouselProps> = ({
   const count = children?.length || 1;
 
   const refs = React.useRef<Array<HTMLElement>>(Array.from({ length: count }));
+  const { idx: currIdx } = control;
 
-  const { initUncontrolled, ...uncontrolState } = useCarouselUncontrolled(
-    count,
-    uncontrol
-  );
-  const currIdx = useCarouselIdx(handleScroll, uncontrolState, control);
   useCarouselScroll(currIdx, refs.current);
+  const { handleScrollEvt } = useCarouselScrollEvt(
+    count,
+    isVertical,
+    handleScroll
+  );
 
   const containerSizes = React.useMemo(() => {
     return {
@@ -81,21 +75,14 @@ const Carousel: React.FC<CarouselProps> = ({
     };
   }, [count, isVertical]);
 
-  // React.useEffect(() => {
-  //   const handler = (evt) => {
-  //     console.log(
-  //       evt.originalTarget.scrollingElement.scrollTop,
-  //       evt.originalTarget.scrollingElement.scrollLeft
-  //     );
-  //   };
-  //   window.addEventListener("scroll", handler);
-  //   return () => window.removeEventListener("scroll", handler);
-  // }, []);
-
   if (!children || !children.length) return <></>;
 
   return (
-    <Container isVertical={isVertical} scrollable={scrollable}>
+    <Container
+      isVertical={isVertical}
+      scrollable={scrollable}
+      onScroll={handleScrollEvt as any}
+    >
       <Slider {...containerSizes} isVertical={isVertical}>
         {children.map((item, idx) => (
           <ItemContainer
@@ -104,7 +91,6 @@ const Carousel: React.FC<CarouselProps> = ({
             ref={(ref) => {
               if (!ref) return;
               refs.current[idx] = ref;
-              initUncontrolled();
             }}
           >
             {item}

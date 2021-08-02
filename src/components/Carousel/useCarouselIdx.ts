@@ -4,7 +4,7 @@ interface State {
   idx: number;
 }
 
-function useCarouselIdx(uncontrol: State, control?: State) {
+function useCarouselIdx(control: State) {
   // uncontrol is the state return by useCarouselUncontrolled, it is always true
   // control is the state provided by props, it can be undefined
   // choose currId base on whether control is provided
