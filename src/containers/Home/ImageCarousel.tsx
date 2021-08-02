@@ -50,6 +50,10 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({ isStart }) => {
     return byHeight;
   }, [windowSize]);
 
+  React.useEffect(() => {
+    if (!isStart) setIdx(0);
+  }, [isStart]);
+
   if (!isStart) return <></>;
   return (
     <>
