@@ -24,6 +24,8 @@ const ImageContainer = styled.div`
 const CarouselPlaceholder = styled.div`
   width: 100vw;
   height: 100vh;
+  display: relative;
+  z-index: -1;
 `;
 
 const Home: React.FC<HomeProps> = ({ lang }) => {
@@ -39,16 +41,16 @@ const Home: React.FC<HomeProps> = ({ lang }) => {
 
   return (
     <>
+      <Container>
+        <Carousel isVertical control={{ idx }} handleScroll={setIdx} scrollable>
+          <Landing lang={lang} handleNext={() => setIdx(1)} />
+          <CarouselPlaceholder />
+          <div style={{ width: "100vw", height: "100vh" }}>testing2</div>
+        </Carousel>
+      </Container>
       <ImageContainer>
         <ImageCarousel isStart={idx >= 1} />
       </ImageContainer>
-      <Container>
-        <Carousel isVertical control={{ idx }}>
-          <Landing lang={lang} handleNext={() => setIdx(1)} />
-          <CarouselPlaceholder />
-          <Landing lang={lang} />
-        </Carousel>
-      </Container>
     </>
   );
 };
