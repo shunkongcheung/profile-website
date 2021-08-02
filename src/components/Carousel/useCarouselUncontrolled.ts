@@ -4,8 +4,16 @@ interface UnControl {
   interval: number;
 }
 
-function useCarouselUncontrolled(count: number, uncontrol?: UnControl) {
+type HandleScroll = (id: number) => any;
+
+function useCarouselUncontrolled(
+  count: number,
+  handleScroll: HandleScroll,
+  uncontrol?: UnControl
+) {
   const [state, setState] = useState({ idx: -1 });
+
+  console.log(state);
 
   useEffect(() => {
     // update controlled index in internal
@@ -31,11 +39,19 @@ function useCarouselUncontrolled(count: number, uncontrol?: UnControl) {
     return () => clearInterval(clear);
   }, [setState, count, uncontrol]);
 
-  const initUncontrolled = useCallback(() => {
-    setState((o) => (o.idx !== -1 ? o : { idx: 0 }));
-  }, [setState]);
+  useEffect(() => {
+    if (!uncontrol) return;
+    if (state.idx >= 0) handleScroll(state.idx);
+  }, [state.idx, handleScroll, uncontrol]);
 
-  return { ...state, initUncontrolled };
+  const setUncontrol = useCallback(
+    (idx: number) => {
+      setState((o) => (o.idx === idx ? o : { idx }));
+    },
+    [setState]
+  );
+
+  return { ...state, setUncontrol };
 }
 
 export default useCarouselUncontrolled;
