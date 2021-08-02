@@ -44,6 +44,14 @@ const Duration = styled.h5`
   color: #777;
 `;
 
+const Clickable = styled.a`
+  color: ${(props) => props.theme.colors.primary[900]};
+
+  &:hover {
+    color: ${(props) => props.theme.colors.primary[700]};
+  }
+`;
+
 const TagsContainer = styled.div`
   display: flex;
   width: 30rem;
@@ -104,14 +112,14 @@ const ProfileExperienceItem: React.FC<ProfileExperienceItemProps> = ({
           {title} - {isPartTime ? Trans.internship[lang] : Trans.fulltime[lang]}
         </Title>
         {!!link ? (
-          <a
+          <Clickable
             href={link}
             target="_blank"
             referrerPolicy="no-referrer"
             rel="noreferrer"
           >
             <Company>{company}</Company>
-          </a>
+          </Clickable>
         ) : (
           <Company>{company}</Company>
         )}
