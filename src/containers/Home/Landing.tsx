@@ -21,8 +21,24 @@ const blink = keyframes`
 `;
 
 const ArrowDown = styled(Image)<{ delay: number }>`
+  cursor: pointer;
   animation: ${blink} 2s ease-in-out infinite;
   animation-delay: ${(props) => props.delay}s;
+  color: ${(props) => props.theme.colors.primary[900]};
+`;
+
+const Caption = styled.h3`
+  color: ${(props) => props.theme.colors.primary[800]};
+  margin: auto 0 auto auto;
+
+  opacity: 0;
+  animation ${fadeIn} 0.3s linear forwards;
+  animation-delay: 2s;
+
+  font-size: 1rem;
+  @media (min-width: 600px) {
+    font-size: 2rem;
+  }
 `;
 
 const Container = styled.div`
@@ -75,6 +91,8 @@ const Title = styled.h1`
 
   margin: auto 0 auto auto;
 
+  color: ${(props) => props.theme.colors.primary[800]};
+
   font-size: 3rem;
   width: 20rem;
   @media (min-width: 600px) {
@@ -100,6 +118,10 @@ const TRANS: { [x: string]: I18N } = {
     en: "Nice to meet you",
     zh: "觀迎到來",
   },
+  caption: {
+    en: "Scroll down or click the arrows",
+    zh: "",
+  },
 };
 
 const Landing: React.FC<LandingProps> = ({ handleNext, lang = "en" }) => {
@@ -110,6 +132,7 @@ const Landing: React.FC<LandingProps> = ({ handleNext, lang = "en" }) => {
       </Background>
       <Content>
         <Title>{TRANS.welcome[lang]}</Title>
+        <Caption>{TRANS.caption[lang]}</Caption>
         <NextContainer>
           <NextBtn onClick={handleNext}>
             {Array.from({ length: 3 }).map((_, idx) => (
