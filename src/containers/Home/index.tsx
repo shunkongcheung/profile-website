@@ -1,66 +1,53 @@
 import React, { memo } from "react";
 import styled from "styled-components";
 
-import BlendImage from "./BlendImage";
-import Carousel from "./Carousel";
-import FlippyImage from "./FlippyImage";
-import ThreeDImage from "./ThreeDImage";
+import { Carousel } from "../../components";
+import { Lang } from "../../types";
 
-import { useWindowSize } from "../../hooks";
+import ImageCarousel from "./ImageCarousel";
+import Landing from "./Landing";
 
-interface HomeProps {}
+interface HomeProps {
+  lang: Lang;
+}
 
 const Container = styled.div`
   width: 100vw;
-  height: calc(100vh - 80px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  height: 100vh;
 `;
 
-const ImageContainer = styled.div<{ width: number; height: number }>`
-  width: ${(props) => props.width}px;
-  height: ${(props) => props.height}px;
+const ImageContainer = styled.div`
+  position: absolute;
+  z-index: -1;
 `;
 
-const Home: React.FC<HomeProps> = () => {
-  const windowSize = useWindowSize();
+const CarouselPlaceholder = styled.div`
+  width: 100vw;
+  height: 100vh;
+`;
+
+const Home: React.FC<HomeProps> = ({ lang }) => {
   const [idx, setIdx] = React.useState(0);
-  const sizes = React.useMemo(() => {
-    if (!windowSize.width) return { width: 0, height: 0 };
 
-    const ratio = 4 / 3;
-
-    const WIDTH_PERC = 0.9;
-
-    const byWidth = {
-      width: windowSize.width * WIDTH_PERC,
-      height: (windowSize.width * WIDTH_PERC) / ratio,
-    };
-
-    if (byWidth.height < windowSize.height * 0.8) return byWidth;
-
-    const HEIGHT_PERC = 0.7;
-    const byHeight = {
-      height: windowSize.height * HEIGHT_PERC,
-      width: windowSize.height * HEIGHT_PERC * ratio,
-    };
-    return byHeight;
-  }, [windowSize]);
+  React.useEffect(() => {
+    if (idx !== 1) return;
+    const IMG_COUNT = 3;
+    const ANIMATION_DURATION = 4000; // per image
+    const clear = setTimeout(() => setIdx(2), ANIMATION_DURATION * IMG_COUNT);
+    return () => clearTimeout(clear);
+  }, [idx]);
 
   return (
     <>
+      <ImageContainer>
+        <ImageCarousel isStart={idx >= 1} />
+      </ImageContainer>
       <Container>
-        <ImageContainer {...sizes}>
-          <Carousel handleScroll={setIdx}>
-            <ThreeDImage
-              imgSrc={"/home-second-image.jpg"}
-              isStart={idx === 0}
-            />
-            <FlippyImage imgSrc={"/home-first-image.jpg"} isStart={idx === 1} />
-            <BlendImage imgSrc={"/home-third-image.jpg"} isStart={idx === 2} />
-          </Carousel>
-        </ImageContainer>
+        <Carousel isVertical control={{ idx }}>
+          <Landing lang={lang} handleNext={() => setIdx(1)} />
+          <CarouselPlaceholder />
+          <Landing lang={lang} />
+        </Carousel>
       </Container>
     </>
   );
