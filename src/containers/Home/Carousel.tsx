@@ -1,12 +1,17 @@
 import React, { memo, ReactNode } from "react";
 import styled from "styled-components";
-import { useWindowSize } from "../../hooks";
+
+import useCarouselIdx from "./useCarouselIdx";
+import useCarouselScroll from "./useCarouselScroll";
+import useCarouselUncontrolled from "./useCarouselUncontrolled";
 
 interface CarouselProps {
   children: Array<ReactNode>;
   control?: Control;
   isVertical?: boolean;
   uncontrol?: UnControl;
+  handleScroll?: (idx: number) => any;
+  scrollable?: boolean;
 }
 
 interface Control {
@@ -15,13 +20,15 @@ interface Control {
 
 interface UnControl {
   interval: number;
-  handleScroll: (idx: number) => any;
 }
 
-const Container = styled.div`
-  overflow: hidden;
+const Container = styled.div<{ scrollable: boolean; isVertical: boolean }>`
   width: 100%;
   height: 100%;
+  overflow-x: ${(props) =>
+    !props.isVertical && props.scrollable ? "scroll" : "hidden"};
+  overflow-y: ${(props) =>
+    !!props.isVertical && props.scrollable ? "scroll" : "hidden"};
 `;
 
 const Slider = styled.div<{
@@ -45,16 +52,20 @@ const Carousel: React.FC<CarouselProps> = ({
   children,
   control,
   uncontrol,
+  handleScroll = () => {},
   isVertical = false,
+  scrollable = false,
 }) => {
-  const [state, setState] = React.useState({ idx: -1 });
-  const windowSize = useWindowSize();
-
   const count = children?.length || 1;
-  const refs = React.useRef(Array.from({ length: count }));
 
-  // current id
-  const currId = React.useRef(!!control ? control.idx : state.idx);
+  const refs = React.useRef<Array<HTMLElement>>(Array.from({ length: count }));
+
+  const { initUncontrolled, ...uncontrolState } = useCarouselUncontrolled(
+    count,
+    uncontrol
+  );
+  const currIdx = useCarouselIdx(handleScroll, uncontrolState, control);
+  useCarouselScroll(currIdx, refs.current);
 
   const containerSizes = React.useMemo(() => {
     return {
@@ -70,78 +81,30 @@ const Carousel: React.FC<CarouselProps> = ({
     };
   }, [count, isVertical]);
 
-  React.useEffect(() => {
-    if (!uncontrol) return;
-    const { interval } = uncontrol;
-
-    const clear = setInterval(() => {
-      setState((state) => {
-        const oIdx = state.idx;
-        const nIdx = oIdx + 1;
-
-        const isOver = nIdx >= count;
-
-        if (isOver) {
-          clearInterval(clear);
-          return { idx: oIdx };
-        } else {
-          return { idx: nIdx % count };
-        }
-      });
-    }, interval);
-
-    return () => clearInterval(clear);
-  }, [setState, count, uncontrol]);
-
-  React.useEffect(() => {
-    // only update in uncontrol state
-    if (!uncontrol) return;
-
-    currId.current = state.idx;
-    const ref = refs.current[state.idx] as HTMLElement;
-    if (!ref) return;
-
-    ref.scrollIntoView({ behavior: "smooth" });
-  }, [uncontrol, state.idx]);
-
-  React.useEffect(() => {
-    // only update in uncontrol state
-    if (!uncontrol) return;
-    const { handleScroll } = uncontrol;
-    handleScroll(state.idx);
-  }, [state.idx, uncontrol]);
-
-  React.useEffect(() => {
-    // on resize, refocus to current item
-    const refId = currId.current;
-    const ref = refs.current[refId] as HTMLElement;
-    if (!!ref) ref.scrollIntoView();
-  }, [windowSize]);
-
-  React.useEffect(() => {
-    // only update uncontrol state
-    if (!control) return;
-    const { idx } = control;
-
-    currId.current = idx;
-    const ref = refs.current[idx] as HTMLElement;
-    if (!ref) return;
-
-    ref.scrollIntoView({ behavior: "smooth" });
-  }, [control]);
+  // React.useEffect(() => {
+  //   const handler = (evt) => {
+  //     console.log(
+  //       evt.originalTarget.scrollingElement.scrollTop,
+  //       evt.originalTarget.scrollingElement.scrollLeft
+  //     );
+  //   };
+  //   window.addEventListener("scroll", handler);
+  //   return () => window.removeEventListener("scroll", handler);
+  // }, []);
 
   if (!children || !children.length) return <></>;
 
   return (
-    <Container>
+    <Container isVertical={isVertical} scrollable={scrollable}>
       <Slider {...containerSizes} isVertical={isVertical}>
         {children.map((item, idx) => (
           <ItemContainer
             key={`CarouselItem-${idx}`}
             {...itemSizes}
             ref={(ref) => {
+              if (!ref) return;
               refs.current[idx] = ref;
-              setState((o) => (o.idx !== -1 ? o : { idx: 0 }));
+              initUncontrolled();
             }}
           >
             {item}
