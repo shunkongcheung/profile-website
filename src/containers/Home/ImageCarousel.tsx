@@ -7,6 +7,7 @@ import { useWindowSize } from "../../hooks";
 import BlendImage from "./BlendImage";
 import FlippyImage from "./FlippyImage";
 import ThreeDImage from "./ThreeDImage";
+import useImageCarousel from "./useImageCarousel";
 
 interface ImageCarouselProps {
   isStart: boolean;
@@ -27,7 +28,8 @@ const ImageContainer = styled.div<{ width: number; height: number }>`
 
 const ImageCarousel: React.FC<ImageCarouselProps> = ({ isStart }) => {
   const windowSize = useWindowSize();
-  const [idx, setIdx] = React.useState(0);
+  const { idx } = useImageCarousel(3, isStart);
+
   const sizes = React.useMemo(() => {
     if (!windowSize.width) return { width: 0, height: 0 };
 
@@ -50,16 +52,12 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({ isStart }) => {
     return byHeight;
   }, [windowSize]);
 
-  React.useEffect(() => {
-    if (!isStart) setIdx(0);
-  }, [isStart]);
-
   if (!isStart) return <></>;
   return (
     <>
       <Container>
         <ImageContainer {...sizes}>
-          <Carousel uncontrol={{ interval: 3000 }} handleScroll={setIdx}>
+          <Carousel control={{ idx }}>
             <ThreeDImage
               imgSrc={"/home-second-image.jpg"}
               isStart={isStart && idx === 0}
