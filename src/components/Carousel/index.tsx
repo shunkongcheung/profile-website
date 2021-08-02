@@ -1,10 +1,28 @@
 import React, { memo, ReactNode } from "react";
 import styled from "styled-components";
 
-const Container = styled.div`
-  overflow: hidden;
+import useCarouselScroll from "./useCarouselScroll";
+import useCarouselScrollEvt from "./useCarouselScrollEvt";
+
+interface CarouselProps {
+  children: Array<ReactNode>;
+  control: Control;
+  isVertical?: boolean;
+  handleScroll?: (idx: number) => any;
+  scrollable?: boolean;
+}
+
+interface Control {
+  idx: number;
+}
+
+const Container = styled.div<{ scrollable: boolean; isVertical: boolean }>`
   width: 100%;
   height: 100%;
+  overflow-x: ${(props) =>
+    !props.isVertical && props.scrollable ? "scroll" : "hidden"};
+  overflow-y: ${(props) =>
+    !!props.isVertical && props.scrollable ? "scroll" : "hidden"};
 `;
 
 const Slider = styled.div<{
@@ -24,25 +42,24 @@ const ItemContainer = styled.div<{ width: number; height: number }>`
   padding-right: 5px;
 `;
 
-interface CarouselProps {
-  children: Array<ReactNode>;
-  interval?: number;
-  isInfinite?: boolean;
-  isVertical?: boolean;
-  handleScroll?: (idx: number) => any;
-}
-
 const Carousel: React.FC<CarouselProps> = ({
   children,
+  control,
   handleScroll = () => {},
-  interval = 5000,
-  isInfinite = false,
   isVertical = false,
+  scrollable = false,
 }) => {
-  const [state, setState] = React.useState({ idx: -1 });
-
   const count = children?.length || 1;
-  const refs = React.useRef(Array.from({ length: count }));
+
+  const refs = React.useRef<Array<HTMLElement>>(Array.from({ length: count }));
+  const { idx: currIdx } = control;
+
+  useCarouselScroll(currIdx, refs.current);
+  const { handleScrollEvt } = useCarouselScrollEvt(
+    count,
+    isVertical,
+    handleScroll
+  );
 
   const containerSizes = React.useMemo(() => {
     return {
@@ -58,49 +75,22 @@ const Carousel: React.FC<CarouselProps> = ({
     };
   }, [count, isVertical]);
 
-  React.useEffect(() => {
-    const clear = setInterval(() => {
-      setState((state) => {
-        const oIdx = state.idx;
-        const nIdx = oIdx + 1;
-
-        const isOver = nIdx >= count;
-
-        if (!isInfinite && isOver) {
-          clearInterval(clear);
-          return { idx: oIdx };
-        } else {
-          return { idx: nIdx % count };
-        }
-      });
-    }, interval);
-
-    return () => clearInterval(clear);
-  }, [setState, count, interval, isInfinite]);
-
-  React.useEffect(() => {
-    const ref = refs.current[state.idx] as HTMLElement;
-    if (!ref) return;
-
-    ref.scrollIntoView({ behavior: "smooth" });
-  }, [state.idx]);
-
-  React.useEffect(() => {
-    handleScroll(state.idx);
-  }, [state.idx, handleScroll]);
-
   if (!children || !children.length) return <></>;
 
   return (
-    <Container>
+    <Container
+      isVertical={isVertical}
+      scrollable={scrollable}
+      onScroll={handleScrollEvt as any}
+    >
       <Slider {...containerSizes} isVertical={isVertical}>
         {children.map((item, idx) => (
           <ItemContainer
             key={`CarouselItem-${idx}`}
             {...itemSizes}
             ref={(ref) => {
+              if (!ref) return;
               refs.current[idx] = ref;
-              setState((o) => (o.idx !== -1 ? o : { idx: 0 }));
             }}
           >
             {item}
