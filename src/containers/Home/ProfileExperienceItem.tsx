@@ -25,11 +25,15 @@ const Company = styled.h4`
 const Container = styled.div`
   display: flex;
   padding: 10px 0;
+  border 0px solid #ddd;
+  border-bottom-width: 1px;
+  flex-wrap: wrap;
+
 `;
 
 const Content = styled.div`
   flex: 1;
-  padding-left: 2rem;
+  max-width: 100%;
 `;
 
 const DescList = styled.ul``;
@@ -70,6 +74,9 @@ const Thumbnail = styled.div<{ src: string }>`
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
+
+  margin-right: 1rem;
+  margin-bottom: 1rem;
 `;
 
 const Trans: { [x: string]: I18N } = {
