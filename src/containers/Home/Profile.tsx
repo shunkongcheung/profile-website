@@ -8,8 +8,10 @@ import ProfileAppBar from "./ProfileAppBar";
 import ProfileExperienceItem from "./ProfileExperienceItem";
 import ProfileTag from "./ProfileTag";
 import { Educations, Experiences, Tags } from "./data";
+import ProfileSocial from "./ProfileSocial";
 
 interface ProfileProps {
+  isRender: boolean;
   lang: Lang;
 }
 
@@ -61,7 +63,7 @@ const Titles: { [x: string]: I18N } = {
   },
 };
 
-const Profile: React.FC<ProfileProps> = ({ lang }) => {
+const Profile: React.FC<ProfileProps> = ({ isRender, lang }) => {
   const [scale, setScale] = React.useState(0);
   const { height: windowHeight } = useWindowSize();
 
@@ -117,6 +119,7 @@ const Profile: React.FC<ProfileProps> = ({ lang }) => {
   return (
     <Container onScroll={handleScroll as any}>
       <ProfileAppBar
+        isRender={isRender}
         lang={lang}
         barHeight={BAR_HEIGHT}
         imgRadius={IMG_RADIUS}
@@ -135,6 +138,7 @@ const Profile: React.FC<ProfileProps> = ({ lang }) => {
               </ProfileTag>
             ))}
           </TagsContainer>
+          <ProfileSocial/>
           {!!experiences.length && <h2>{Titles.experience[lang]}</h2>}
           {experiences.map((experience, idx) => (
             <ProfileExperienceItem
