@@ -1,5 +1,22 @@
 import React, { memo, ReactNode } from "react";
 import styled from "styled-components";
+import { useWindowSize } from "../../hooks";
+
+interface CarouselProps {
+  children: Array<ReactNode>;
+  control?: Control;
+  isVertical?: boolean;
+  uncontrol?: UnControl;
+}
+
+interface Control {
+  idx: number;
+}
+
+interface UnControl {
+  interval: number;
+  handleScroll: (idx: number) => any;
+}
 
 const Container = styled.div`
   overflow: hidden;
@@ -24,25 +41,20 @@ const ItemContainer = styled.div<{ width: number; height: number }>`
   padding-right: 5px;
 `;
 
-interface CarouselProps {
-  children: Array<ReactNode>;
-  interval?: number;
-  isInfinite?: boolean;
-  isVertical?: boolean;
-  handleScroll?: (idx: number) => any;
-}
-
 const Carousel: React.FC<CarouselProps> = ({
   children,
-  handleScroll = () => {},
-  interval = 5000,
-  isInfinite = false,
+  control,
+  uncontrol,
   isVertical = false,
 }) => {
   const [state, setState] = React.useState({ idx: -1 });
+  const windowSize = useWindowSize();
 
   const count = children?.length || 1;
   const refs = React.useRef(Array.from({ length: count }));
+
+  // current id
+  const currId = React.useRef(!!control ? control.idx : state.idx);
 
   const containerSizes = React.useMemo(() => {
     return {
@@ -59,6 +71,9 @@ const Carousel: React.FC<CarouselProps> = ({
   }, [count, isVertical]);
 
   React.useEffect(() => {
+    if (!uncontrol) return;
+    const { interval } = uncontrol;
+
     const clear = setInterval(() => {
       setState((state) => {
         const oIdx = state.idx;
@@ -66,7 +81,7 @@ const Carousel: React.FC<CarouselProps> = ({
 
         const isOver = nIdx >= count;
 
-        if (!isInfinite && isOver) {
+        if (isOver) {
           clearInterval(clear);
           return { idx: oIdx };
         } else {
@@ -76,18 +91,44 @@ const Carousel: React.FC<CarouselProps> = ({
     }, interval);
 
     return () => clearInterval(clear);
-  }, [setState, count, interval, isInfinite]);
+  }, [setState, count, uncontrol]);
 
   React.useEffect(() => {
+    // only update in uncontrol state
+    if (!uncontrol) return;
+
+    currId.current = state.idx;
     const ref = refs.current[state.idx] as HTMLElement;
     if (!ref) return;
 
     ref.scrollIntoView({ behavior: "smooth" });
-  }, [state.idx]);
+  }, [uncontrol, state.idx]);
 
   React.useEffect(() => {
+    // only update in uncontrol state
+    if (!uncontrol) return;
+    const { handleScroll } = uncontrol;
     handleScroll(state.idx);
-  }, [state.idx, handleScroll]);
+  }, [state.idx, uncontrol]);
+
+  React.useEffect(() => {
+    // on resize, refocus to current item
+    const refId = currId.current;
+    const ref = refs.current[refId] as HTMLElement;
+    if (!!ref) ref.scrollIntoView();
+  }, [windowSize]);
+
+  React.useEffect(() => {
+    // only update uncontrol state
+    if (!control) return;
+    const { idx } = control;
+
+    currId.current = idx;
+    const ref = refs.current[idx] as HTMLElement;
+    if (!ref) return;
+
+    ref.scrollIntoView({ behavior: "smooth" });
+  }, [control]);
 
   if (!children || !children.length) return <></>;
 
