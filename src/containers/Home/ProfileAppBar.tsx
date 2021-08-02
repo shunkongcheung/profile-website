@@ -11,11 +11,13 @@ interface ProfileAppBarProps {
   imgRadius: number;
 }
 
-const Border = styled.div`
-  height: 1px;
+const Border = styled.div<{ scale: number }>`
+  height: 2px;
   width: 80%;
-  background: #777;
+  background: #eee;
   margin-bottom: 0.2rem;
+
+  transform: scale(1, ${(props) => 1 / props.scale});
 `;
 const Container = styled.div<{
   scale: number;
@@ -50,7 +52,6 @@ const Content = styled.div<{ scale: number }>`
 const Cover = styled.div<{ imgRadius: number; scale: number }>`
   width: 100vw;
   height: ${(props) => props.imgRadius + 2.8}rem;
-  transform: translate(-33.333%) scale(${(props) => 1 / props.scale}, 1);
   bottom: 0;
   left: 0;
   position: absolute;
@@ -60,13 +61,16 @@ const Cover = styled.div<{ imgRadius: number; scale: number }>`
   display: flex;
   align-items: end;
   justify-content: center;
+
+  transform: translateY(100%) scale(1, ${(props) => props.scale});
+  transform-origin: top;
 `;
 
 const Location = styled.h2`
   margin-left: auto;
   margin-right: auto;
   margin-top: 0rem;
-  margin-bottom: 0.5rem;
+  padding-bottom: 1rem;
   font-weight: 300;
 `;
 
@@ -118,10 +122,10 @@ const ProfileAppBar: React.FC<ProfileAppBarProps> = ({
         <MyImage imgRadius={imgRadius} />
         <Name>{TRANS.name[lang]}</Name>
         <Location>{TRANS.location[lang]}</Location>
-        <Cover imgRadius={imgRadius} scale={contentScale}>
-          <Border />
-        </Cover>
       </Content>
+      <Cover imgRadius={imgRadius} scale={contentScale}>
+        <Border scale={contentScale} />
+      </Cover>
     </Container>
   );
 };
