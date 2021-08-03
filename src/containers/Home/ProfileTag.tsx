@@ -7,7 +7,7 @@ interface TagProps {
   onClick?: () => any;
 }
 
-const Container = styled.div<{ cursor: boolean; dehighlight: boolean }>`
+const Container = styled.div<{ isCursor: boolean; dehighlight: boolean }>`
   background: ${(props) => props.theme.colors.primary[50]};
   color: ${(props) =>
     props.theme.colors.primary[props.dehighlight ? 300 : 900]};
@@ -15,12 +15,12 @@ const Container = styled.div<{ cursor: boolean; dehighlight: boolean }>`
   margin: 3px;
   border: 1px solid ${(props) => props.theme.colors.primary[900]};
   border-radius: 5px;
-  ${(props) => !!props.cursor && "cursor: pointer;"};
+  ${(props) => !!props.isCursor && "cursor: pointer;"};
 `;
 
 const ProfileTag: React.FC<TagProps> = ({ children, dehighlight, onClick }) => {
   return (
-    <Container cursor={!!onClick} onClick={onClick} dehighlight={dehighlight}>
+    <Container isCursor={!!onClick} onClick={onClick} dehighlight={dehighlight}>
       {children}
     </Container>
   );
