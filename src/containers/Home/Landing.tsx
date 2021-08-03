@@ -2,7 +2,13 @@ import React, { memo } from "react";
 import Image from "next/image";
 import styled, { keyframes } from "styled-components";
 
+import { Carousel } from "../../components";
 import { I18N, Lang } from "../../types";
+
+import BlendImage from "./BlendImage";
+import FlippyImage from "./FlippyImage";
+import ThreeDImage from "./ThreeDImage";
+import { useWindowSize } from "../../hooks";
 
 interface LandingProps {
   lang: Lang;
@@ -24,16 +30,30 @@ const ArrowDown = styled(Image)<{ delay: number }>`
   cursor: pointer;
   animation: ${blink} 2s ease-in-out infinite;
   animation-delay: ${(props) => props.delay}s;
-  color: ${(props) => props.theme.colors.primary[900]};
+  color: white;
+`;
+
+const LeftColumn = styled.div<{ width: number; height: number }>`
+  flex: 1;
+  display: none;
+
+  width: ${(props) => props.width}px;
+  height: ${(props) => props.height}px;
+
+  border-radius: 1rem;
+  overflow: hidden;
+  @media (min-width: 600px) {
+    display: block;
+  }
 `;
 
 const Caption = styled.h3`
-  color: ${(props) => props.theme.colors.primary[800]};
-  margin: auto 0 auto auto;
+  color: white;
 
   opacity: 0;
   animation ${fadeIn} 0.3s linear forwards;
   animation-delay: 2s;
+  margin: 0 0 0 auto;
 
   font-size: 1rem;
   @media (min-width: 600px) {
@@ -52,9 +72,9 @@ const Content = styled.div`
   height: 100%;
 
   display: flex;
-  flex-direction: column;
-  padding: 2rem;
+  flex-wrap: wrap;
 
+  padding: 1rem;
   @media (min-width: 600px) {
     padding: 5rem;
   }
@@ -63,21 +83,40 @@ const Content = styled.div`
 const Background = styled.div`
   width: 100%;
   height: 100%;
-  background: url("/home-landing.jpg");
-  background-size: cover;
-  background-position: 100% 50%;
+  background: linear-gradient(
+    ${(props) => props.theme.colors.primary[500]},
+    ${(props) => props.theme.colors.primary[500]},
+    ${(props) => props.theme.colors.primary[600]}
+  );
   position: absolute;
 
   z-index: -1;
 `;
 
-const Filter = styled.div`
-  width: 100%;
+const Row = styled.div`
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+
+  margin-top: auto;
+  margin-bottom: auto;
+
+  height: 25rem;
+  max-height: 80%;
+
+  flex-direction: column;
+  @media (min-width: 600px) {
+    flex-direction: row;
+  }
+`;
+
+const RightColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
   height: 100%;
-  position: absolute;
-  background: radial-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
-  opacity: 0.7;
-  z-index: -1;
+  justify-content: space-between;
 `;
 
 const Title = styled.h1`
@@ -85,13 +124,12 @@ const Title = styled.h1`
   letter-spacing: 3px;
   text-align: end;
   font-weight: 500;
+  margin: 0 0 0 auto;
 
   transition: opacity;
   animation: ${fadeIn} 0.5s ease-in forwards;
 
-  margin: auto 0 auto auto;
-
-  color: ${(props) => props.theme.colors.primary[800]};
+  color: white;
 
   font-size: 3rem;
   width: 20rem;
@@ -102,8 +140,10 @@ const Title = styled.h1`
 `;
 
 const NextContainer = styled.div`
-  margin-left: auto;
-  margin-right: auto;
+  display: flex;
+  margin-top: auto;
+  justify-content: center;
+  width: 100%;
 `;
 
 const NextBtn = styled.button`
@@ -119,20 +159,67 @@ const TRANS: { [x: string]: I18N } = {
     zh: "觀迎到來",
   },
   caption: {
-    en: "Scroll down or click the arrows",
+    en: "Click the arrows",
     zh: "",
   },
 };
 
 const Landing: React.FC<LandingProps> = ({ handleNext, lang = "en" }) => {
+  const [idx, setIdx] = React.useState(0);
+  React.useEffect(() => {
+    const clear = setInterval(() => setIdx((o) => (o + 1) % 3), 5000);
+    return () => clearInterval(clear);
+  }, [setIdx]);
+
+  const windowSize = useWindowSize();
+  const sizes = React.useMemo(() => {
+    if (!windowSize.width) return { width: 0, height: 0 };
+
+    const ratio = 4 / 3;
+
+    const WIDTH_PERC = 0.4;
+
+    const byWidth = {
+      width: windowSize.width * WIDTH_PERC,
+      height: (windowSize.width * WIDTH_PERC) / ratio,
+    };
+
+    if (byWidth.height < windowSize.height * 0.8) return byWidth;
+
+    const HEIGHT_PERC = 0.4;
+    const byHeight = {
+      height: windowSize.height * HEIGHT_PERC,
+      width: windowSize.height * HEIGHT_PERC * ratio,
+    };
+    return byHeight;
+  }, [windowSize]);
+
   return (
     <Container>
-      <Background>
-        <Filter />
-      </Background>
+      <Background />
       <Content>
-        <Title>{TRANS.welcome[lang]}</Title>
-        <Caption>{TRANS.caption[lang]}</Caption>
+        <Row>
+          <LeftColumn {...sizes}>
+            <Carousel control={{ idx }}>
+              <ThreeDImage
+                imgSrc={"/home-second-image.jpg"}
+                isStart={idx === 0}
+              />
+              <FlippyImage
+                imgSrc={"/home-first-image.jpg"}
+                isStart={idx === 1}
+              />
+              <BlendImage
+                imgSrc={"/home-third-image.jpg"}
+                isStart={idx === 2}
+              />
+            </Carousel>
+          </LeftColumn>
+          <RightColumn>
+            <Title>{TRANS.welcome[lang]}</Title>
+            <Caption>{TRANS.caption[lang]}</Caption>
+          </RightColumn>
+        </Row>
         <NextContainer>
           <NextBtn onClick={handleNext}>
             {Array.from({ length: 3 }).map((_, idx) => (

@@ -45,7 +45,7 @@ const BlenderContainer = styled.div`
   width: 100%;
   height: 100%;
 
-  background: white;
+  background: ${(props) => props.theme.colors.primary[500]};
 
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;

@@ -1,5 +1,6 @@
 import React, { memo } from "react";
 import styled from "styled-components";
+import { useDeferredValue } from "../../hooks";
 
 import { I18N, Lang } from "../../types";
 
@@ -26,11 +27,15 @@ const Container = styled.div<{
 }>`
   width: 100%;
   height: ${(props) => props.scale * props.barHeight}%;
-  background: ${(props) => props.theme.colors.primary[500]};
+  background: linear-gradient(
+    ${(props) => props.theme.colors.primary[600]},
+    ${(props) => props.theme.colors.primary[500]},
+    ${(props) => props.theme.colors.primary[500]}
+  );
 
   transform-origin: 0 0;
   opacity: 0;
-  ${(props) => !!props.isRender && "position: fixed;"}
+  ${(props) => !!props.isRender && "position: sticky;"}
   ${(props) => !!props.isRender && "opacity: 1;"}
   transition: opacity 0.5s ease-in;
   top: 0;
@@ -44,6 +49,7 @@ const Content = styled.div<{ scale: number }>`
   margin-right: auto;
 
   transform: translate(-50%, 50%) scale(${(props) => props.scale});
+  transition: transform 0.5s linear;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -64,6 +70,7 @@ const Cover = styled.div<{ imgRadius: number; scale: number }>`
 
   transform: translateY(100%) scale(1, ${(props) => props.scale});
   transform-origin: top;
+  transition: transform 0.5s linear;
 `;
 
 const Location = styled.h2`
@@ -111,10 +118,11 @@ const ProfileAppBar: React.FC<ProfileAppBarProps> = ({
   lang,
   scale,
 }) => {
-  const contentScale = Math.max(1 - 2 * scale, 0.3);
+  const deferredScale = useDeferredValue(scale, { timeoutMs: 200 });
+  const contentScale = Math.max(1 - 2 * deferredScale, 0.3);
   return (
     <Container
-      scale={Math.max(1 - scale * 1.2, 0.4)}
+      scale={Math.max(1 - deferredScale * 1.2, 0.4)}
       barHeight={barHeight}
       isRender={isRender}
     >

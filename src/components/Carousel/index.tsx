@@ -1,7 +1,6 @@
 import React, { memo, ReactNode } from "react";
 import styled from "styled-components";
 
-import useCarouselScroll from "./useCarouselScroll";
 import useCarouselScrollEvt from "./useCarouselScrollEvt";
 
 interface CarouselProps {
@@ -28,11 +27,16 @@ const Container = styled.div<{ scrollable: boolean; isVertical: boolean }>`
 const Slider = styled.div<{
   width: number;
   height: number;
+  tx: number;
+  ty: number;
   isVertical: boolean;
 }>`
   width: ${(props) => props.width * 100}%;
   height: ${(props) => props.height * 100}%;
   ${(props) => !props.isVertical && "display: flex;"}
+
+  transform: translate(${(props) => `${props.tx}%, ${props.ty}`}%);
+  transition: transform 0.5s ease-in;
 `;
 
 const ItemContainer = styled.div<{ width: number; height: number }>`
@@ -51,12 +55,14 @@ const Carousel: React.FC<CarouselProps> = ({
 
   const refs = React.useRef<Array<HTMLElement>>(Array.from({ length: count }));
   const { idx: currIdx } = control;
+  const slideRef = React.useRef<HTMLElement>();
 
-  useCarouselScroll(currIdx, refs.current);
   const { handleScrollEvt } = useCarouselScrollEvt(
+    currIdx,
     count,
     isVertical,
-    handleScroll
+    handleScroll,
+    slideRef.current
   );
 
   const containerSizes = React.useMemo(() => {
@@ -65,6 +71,13 @@ const Carousel: React.FC<CarouselProps> = ({
       height: isVertical ? count : 1,
     };
   }, [count, isVertical]);
+
+  const containerTranslate = React.useMemo(() => {
+    return {
+      tx: isVertical ? 0 : -(currIdx / count) * 100,
+      ty: !isVertical ? 0 : -(currIdx / count) * 100,
+    };
+  }, [count, currIdx, isVertical]);
 
   const itemSizes = React.useMemo(() => {
     return {
@@ -81,7 +94,12 @@ const Carousel: React.FC<CarouselProps> = ({
       scrollable={scrollable}
       onScroll={handleScrollEvt as any}
     >
-      <Slider {...containerSizes} isVertical={isVertical}>
+      <Slider
+        {...containerSizes}
+        {...containerTranslate}
+        ref={(ref) => (slideRef.current = ref)}
+        isVertical={isVertical}
+      >
         {children.map((item, idx) => (
           <ItemContainer
             key={`CarouselItem-${idx}`}
