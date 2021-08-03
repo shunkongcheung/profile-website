@@ -1,3 +1,4 @@
+import useDeferredValue from "./useDeferredValue";
 import useWindowSize from "./useWindowSize";
 
-export { useWindowSize };
+export { useDeferredValue, useWindowSize };
