@@ -28,7 +28,7 @@ const Container = styled.div`
 
 const ContentContainer = styled.div`
   display: flex;
-  margin-top: calc(${BAR_HEIGHT}vh + ${IMG_RADIUS + 7}rem);
+  margin-top: calc(${IMG_RADIUS + 7}rem);
   width: 100%;
 `;
 
