@@ -26,7 +26,11 @@ const Container = styled.div<{
 }>`
   width: 100%;
   height: ${(props) => props.scale * props.barHeight}%;
-  background: ${(props) => props.theme.colors.primary[500]};
+  background: linear-gradient(
+    ${(props) => props.theme.colors.primary[600]},
+    ${(props) => props.theme.colors.primary[500]},
+    ${(props) => props.theme.colors.primary[500]}
+  );
 
   transform-origin: 0 0;
   opacity: 0;

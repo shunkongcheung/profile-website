@@ -41,8 +41,8 @@ const Home: React.FC<HomeProps> = ({ lang }) => {
   const { width: screenWidth } = useWindowSize();
 
   const isSmallScreen = screenWidth <= 400;
-  const isProfilePage =
-    (isSmallScreen && state.idx === 1) || (!isSmallScreen && state.idx === 2);
+  const PROFILE_PAGE_IDX = isSmallScreen ? 1 : 2;
+  const isProfilePage = state.idx === PROFILE_PAGE_IDX;
 
   React.useEffect(() => {
     // the following code only execute when page 1 is the carousel
@@ -59,36 +59,24 @@ const Home: React.FC<HomeProps> = ({ lang }) => {
   }, [isSmallScreen, state.idx, setState]);
 
   React.useEffect(() => {
-    if (state.idx !== 2 || state.isProfile) return;
-
-    const clear = setTimeout(() => setState({ idx: 2, isProfile: true }), 500);
+    if (!isProfilePage || state.isProfile) return;
+    const clear = setTimeout(
+      () => setState({ idx: PROFILE_PAGE_IDX, isProfile: true }),
+      500
+    );
     return () => clearTimeout(clear);
-  }, [state.idx, state.isProfile, setState]);
-
-  React.useEffect(() => {
-    // on refresh, hard reset the scrolling of browser
-    const isReset = state.idx === 0;
-
-    // isProfilePage needs to hard reset page
-    if (isReset || isProfilePage) {
-      window.scrollTo(0, 0);
-    }
-  }, [state.idx, isProfilePage, setState]);
+  }, [isProfilePage, state.isProfile, setState, PROFILE_PAGE_IDX]);
 
   const handleScroll = React.useCallback(
     (idx) => {
       setState((o) => {
         // in small screen, skip carousel page
-        if (o.idx === 0 && idx === 1) {
-          return isSmallScreen
-            ? { idx: 1, isProfile: true }
-            : { idx: 1, isProfile: false };
-        }
+        if (o.idx === 0 && idx === 1) return { idx: 1, isProfile: false };
         // scrolling on other pages are not allowed
         return o;
       });
     },
-    [isSmallScreen, setState]
+    [setState]
   );
 
   const children = React.useMemo(() => {
@@ -97,7 +85,7 @@ const Home: React.FC<HomeProps> = ({ lang }) => {
       <Landing
         key={"CarouselItem-Landing"}
         lang={lang}
-        handleNext={() => setState({ idx: 1, isProfile: false })}
+        handleNext={() => handleScroll(1)}
       />,
     ];
 
@@ -112,7 +100,7 @@ const Home: React.FC<HomeProps> = ({ lang }) => {
       />
     );
     return ret;
-  }, [lang, isProfilePage, isSmallScreen, setState]);
+  }, [lang, isProfilePage, isSmallScreen, handleScroll]);
 
   if (state.isProfile) return <Profile lang={lang} isRender />;
 
