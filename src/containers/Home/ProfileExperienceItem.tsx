@@ -7,11 +7,16 @@ import { Lang, I18N } from "../../types";
 import { Carousel } from "../../components";
 import ProfileTag from "./ProfileTag";
 
+interface TagShape extends I18N {
+  id: string;
+}
+
 interface ProfileExperienceItemProps {
   company: string;
   descriptions: Array<string>;
   dateFrom: Moment;
   dateTo: Moment;
+  handleTagClick: (key: string) => any;
   images: Array<string>;
   isPartTime?: boolean;
   isLast: boolean;
@@ -19,7 +24,7 @@ interface ProfileExperienceItemProps {
   link?: string;
   title: string;
   thumbnail: string;
-  tags: Array<I18N>;
+  tags: Array<TagShape>;
 }
 
 const Company = styled.h4`
@@ -122,6 +127,7 @@ const ProfileExperienceItem: React.FC<ProfileExperienceItemProps> = ({
   descriptions,
   dateFrom,
   dateTo,
+  handleTagClick,
   lang,
   images,
   isPartTime,
@@ -194,7 +200,12 @@ const ProfileExperienceItem: React.FC<ProfileExperienceItemProps> = ({
         </Duration>
         <TagsContainer>
           {tags.map((tag, idx) => (
-            <ProfileTag key={`ProfileTag-${idx}`}>{tag[lang]}</ProfileTag>
+            <ProfileTag
+              key={`ProfileTag-${idx}`}
+              onClick={() => handleTagClick(tag.id)}
+            >
+              {tag[lang]}
+            </ProfileTag>
           ))}
         </TagsContainer>
 

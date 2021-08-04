@@ -117,6 +117,7 @@ const Profile: React.FC<ProfileProps> = ({ lang }) => {
           dateTo={experience.dateTo}
           lang={lang}
           link={experience.link}
+          handleTagClick={handleTag}
           images={experience.images}
           isPartTime={experience.isPartTime}
           tags={experience.tags}
@@ -136,6 +137,7 @@ const Profile: React.FC<ProfileProps> = ({ lang }) => {
           lang={lang}
           link={education.link}
           images={education.images}
+          handleTagClick={handleTag}
           isPartTime={education.isPartTime}
           tags={education.tags}
           title={education.title}
