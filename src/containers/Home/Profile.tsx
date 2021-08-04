@@ -22,7 +22,7 @@ const Container = styled.div`
 const Heading = styled.h3`
   margin-top: 3rem;
   font-size: 2rem;
-  color: white;
+  color: ${(props) => props.theme.colors.primary[50]};
 `;
 
 const ProfileSocialContainer = styled.div`

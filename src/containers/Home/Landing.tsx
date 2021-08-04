@@ -2,6 +2,7 @@ import React, { memo } from "react";
 import styled from "styled-components";
 
 import { Carousel } from "../../components";
+import { useWindowSize } from "../../hooks";
 import { I18N, Lang } from "../../types";
 
 import BlendImage from "./BlendImage";
@@ -34,7 +35,21 @@ const Content = styled.div`
 
 const CarouselContainer = styled.div`
   width: 100%;
-  height: 500px;
+  height: 250px;
+
+  @media (min-width: 600px) {
+    height: 500px;
+  }
+`;
+
+const MyImage = styled.div<{ src: string }>`
+  width: 100%;
+  height: 100%;
+
+  background: url(${(props) => props.src});
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
 `;
 
 const Name = styled.h1`
@@ -67,6 +82,7 @@ const TRANS: { [x: string]: I18N } = {
 
 const Landing: React.FC<LandingProps> = ({ lang = "en" }) => {
   const [idx, setIdx] = React.useState(0);
+  const { width } = useWindowSize();
   React.useEffect(() => {
     const clear = setInterval(() => setIdx((o) => (o + 1) % 3), 5000);
     return () => clearInterval(clear);
@@ -80,9 +96,32 @@ const Landing: React.FC<LandingProps> = ({ lang = "en" }) => {
       </Content>
       <CarouselContainer>
         <Carousel control={{ idx }}>
-          <ThreeDImage imgSrc={"/home-second-image.jpg"} isStart={idx === 0} />
-          <FlippyImage imgSrc={"/home-first-image.jpg"} isStart={idx === 1} />
-          <BlendImage imgSrc={"/home-third-image.jpg"} isStart={idx === 2} />
+          {width > 600
+            ? [
+                <ThreeDImage
+                  key="LandingCarouselAnimate-1"
+                  imgSrc={"/home-second-image.jpg"}
+                  isStart={idx === 0}
+                />,
+                <FlippyImage
+                  key="LandingCarouselAnimate-2"
+                  imgSrc={"/home-first-image.jpg"}
+                  isStart={idx === 1}
+                />,
+                <BlendImage
+                  key="LandingCarouselAnimate-3"
+                  imgSrc={"/home-third-image.jpg"}
+                  isStart={idx === 2}
+                />,
+              ]
+            : [
+                <MyImage
+                  src="/home-second-image.jpg"
+                  key="LandingCarousel-1"
+                />,
+                <MyImage src="/home-first-image.jpg" key="LandingCarousel-2" />,
+                <MyImage src="/home-third-image.jpg" key="LandingCarousel-3" />,
+              ]}
         </Carousel>
       </CarouselContainer>
     </Container>

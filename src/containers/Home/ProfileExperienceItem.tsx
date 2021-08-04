@@ -45,10 +45,15 @@ const Container = styled.div<{ borderWidth: number }>`
 
 const CarouselContainer = styled.div`
   width: 200px;
-  height: 300px;
   margin-left: auto;
+
   margin-right: auto;
-  margin-right: 1rem;
+  height: 150px;
+
+  @media (min-width: 600px) {
+    margin-right: 1rem;
+    height: 300px;
+  }
 `;
 
 const Content = styled.div`
