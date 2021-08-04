@@ -131,20 +131,26 @@ const ProfileExperienceItem: React.FC<ProfileExperienceItemProps> = ({
   title,
   thumbnail,
 }) => {
+  const [idx, setIdx] = React.useState(0);
+  const [isCursored, setIsCursored] = React.useState(false);
+
   const years = dateTo.diff(dateFrom, "years");
-  const months = dateTo.diff(dateFrom, "months");
+  let months = dateTo.diff(dateFrom, "months") % 12;
+  if (!years && !months) months = 1;
+
   const isToday = Math.abs(dateTo.diff(new Date(), "days")) < 1;
 
   const toStr = isToday ? Trans.present[lang] : dateTo.format("MMM YY");
 
-  const [idx, setIdx] = React.useState(0);
   React.useEffect(() => {
+    if (isCursored) setIdx((o) => (o + 1) % (images.length + 1));
+
     const clear = setInterval(
-      () => setIdx((o) => (o + 1) % (images.length + 1)),
+      () => isCursored && setIdx((o) => (o + 1) % (images.length + 1)),
       3000
     );
     return () => clearInterval(clear);
-  }, [setIdx, images]);
+  }, [setIdx, isCursored, images]);
 
   const carousels = React.useMemo(
     () => [
@@ -156,7 +162,11 @@ const ProfileExperienceItem: React.FC<ProfileExperienceItemProps> = ({
     [thumbnail, images]
   );
   return (
-    <Container borderWidth={isLast ? 0 : 1}>
+    <Container
+      borderWidth={isLast ? 0 : 1}
+      onMouseEnter={() => setIsCursored(true)}
+      onMouseLeave={() => setIsCursored(false)}
+    >
       <CarouselContainer>
         <Carousel control={{ idx }}>{carousels}</Carousel>
       </CarouselContainer>
@@ -180,7 +190,7 @@ const ProfileExperienceItem: React.FC<ProfileExperienceItemProps> = ({
         )}
         <Duration>
           {dateFrom.format("MMM YY")} - {toStr} / {!!years && `${years} yr`}{" "}
-          {months} mos
+          {!!months && `${months} mos`}
         </Duration>
         <TagsContainer>
           {tags.map((tag, idx) => (
