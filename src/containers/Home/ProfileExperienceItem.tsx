@@ -1,14 +1,18 @@
 import React, { memo } from "react";
 import styled from "styled-components";
 import { Moment } from "moment";
-import ProfileTag from "./ProfileTag";
+
 import { Lang, I18N } from "../../types";
+
+import { Carousel } from "../../components";
+import ProfileTag from "./ProfileTag";
 
 interface ProfileExperienceItemProps {
   company: string;
   descriptions: Array<string>;
   dateFrom: Moment;
   dateTo: Moment;
+  images: Array<string>;
   isPartTime?: boolean;
   isLast: boolean;
   lang: Lang;
@@ -20,7 +24,8 @@ interface ProfileExperienceItemProps {
 
 const Company = styled.h4`
   font-weight: 400;
-  margin: 0.3rem 0;
+  margin: 0.5rem 0;
+  color: ${(props) => props.theme.colors.primary[50]};
 `;
 
 const Container = styled.div<{ borderWidth: number }>`
@@ -31,6 +36,14 @@ const Container = styled.div<{ borderWidth: number }>`
   flex-wrap: wrap;
   margin-bottom: 1.5rem;
 
+`;
+
+const CarouselContainer = styled.div`
+  width: 200px;
+  height: 300px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-right: 1rem;
 `;
 
 const Content = styled.div`
@@ -44,20 +57,27 @@ const DescList = styled.ul`
 
 const DescItem = styled.li`
   margin-bottom: 0.5rem;
+  color: ${(props) => props.theme.colors.primary[50]};
 `;
 
 const Duration = styled.h5`
   margin-top: 0.4rem;
-  font-weight: 300;
-  color: #777;
+  font-weight: 500;
+  color: ${(props) => props.theme.colors.primary[100]};
 `;
 
-const Clickable = styled.a`
-  color: ${(props) => props.theme.colors.primary[900]};
+const Link = styled.a`
+  margin: 0;
+`;
 
-  &:hover {
-    color: ${(props) => props.theme.colors.primary[700]};
-  }
+const MyImage = styled.div<{ src: string }>`
+  margin: auto;
+  width: 100%;
+  height: 9rem;
+  background: url(${(props) => props.src});
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 `;
 
 const TagsContainer = styled.div`
@@ -69,18 +89,17 @@ const TagsContainer = styled.div`
 
 const Title = styled.h3`
   margin: 0;
+  color ${(props) => props.theme.colors.primary[500]};
 `;
 
 const Thumbnail = styled.div<{ src: string }>`
+  margin: auto;
   width: 7rem;
   height: 7rem;
   background: url(${(props) => props.src});
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
-
-  margin-right: 1rem;
-  margin-bottom: 1rem;
 `;
 
 const Trans: { [x: string]: I18N } = {
@@ -104,6 +123,7 @@ const ProfileExperienceItem: React.FC<ProfileExperienceItemProps> = ({
   dateFrom,
   dateTo,
   lang,
+  images,
   isPartTime,
   isLast,
   link,
@@ -116,22 +136,45 @@ const ProfileExperienceItem: React.FC<ProfileExperienceItemProps> = ({
   const isToday = Math.abs(dateTo.diff(new Date(), "days")) < 1;
 
   const toStr = isToday ? Trans.present[lang] : dateTo.format("MMM YY");
+
+  const [idx, setIdx] = React.useState(0);
+  React.useEffect(() => {
+    const clear = setInterval(
+      () => setIdx((o) => (o + 1) % (images.length + 1)),
+      3000
+    );
+    return () => clearInterval(clear);
+  }, [setIdx, images]);
+
+  const carousels = React.useMemo(
+    () => [
+      <Thumbnail key={`MyImage-thumbnail-${thumbnail}`} src={thumbnail} />,
+      ...images.map((src, idx) => (
+        <MyImage key={`MyImage-${idx}-${src}`} src={src} />
+      )),
+    ],
+    [thumbnail, images]
+  );
   return (
     <Container borderWidth={isLast ? 0 : 1}>
-      <Thumbnail src={thumbnail} />
+      <CarouselContainer>
+        <Carousel control={{ idx }}>{carousels}</Carousel>
+      </CarouselContainer>
       <Content>
         <Title>
           {title} - {isPartTime ? Trans.internship[lang] : Trans.fulltime[lang]}
         </Title>
         {!!link ? (
-          <Clickable
-            href={link}
-            target="_blank"
-            referrerPolicy="no-referrer"
-            rel="noreferrer"
-          >
-            <Company>{company}</Company>
-          </Clickable>
+          <Company>
+            <Link
+              href={link}
+              target="_blank"
+              referrerPolicy="no-referrer"
+              rel="noreferrer"
+            >
+              {company}
+            </Link>
+          </Company>
         ) : (
           <Company>{company}</Company>
         )}
