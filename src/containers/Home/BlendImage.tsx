@@ -36,12 +36,10 @@ const image = keyframes`
 100% { transform: translateX(-4%)};
 `;
 
-const COLOR = "#444";
-
 const Container = styled.div`
   width: 100%;
   height: 100%;
-  background: ${COLOR};
+  background: ${(props) => props.theme.colors.primary[500]};
   position: relative;
   overflow: hidden;
   border-radius: 5px;
@@ -59,7 +57,7 @@ const MyImage = styled.div<{ imgSrc: string } & CoverProps>`
 
 const LeftCover = styled.div<CoverProps>`
   position: absolute;
-  background: ${COLOR};
+  background: ${(props) => props.theme.colors.primary[500]};
   left: 0;
   height: 100%;
   width: 5%;
@@ -72,7 +70,7 @@ const LeftCover = styled.div<CoverProps>`
 
 const RightCover = styled.div<CoverProps>`
   position: absolute;
-  background: ${COLOR};
+  background: ${(props) => props.theme.colors.primary[500]};
   right: 0;
   height: 100%;
   width: 100%;
