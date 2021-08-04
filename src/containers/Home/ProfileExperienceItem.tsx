@@ -1,26 +1,36 @@
 import React, { memo } from "react";
 import styled from "styled-components";
 import { Moment } from "moment";
-import ProfileTag from "./ProfileTag";
+
 import { Lang, I18N } from "../../types";
+
+import { Carousel } from "../../components";
+import ProfileTag from "./ProfileTag";
+
+interface TagShape extends I18N {
+  id: string;
+}
 
 interface ProfileExperienceItemProps {
   company: string;
   descriptions: Array<string>;
   dateFrom: Moment;
   dateTo: Moment;
+  handleTagClick: (key: string) => any;
+  images: Array<string>;
   isPartTime?: boolean;
   isLast: boolean;
   lang: Lang;
   link?: string;
   title: string;
   thumbnail: string;
-  tags: Array<I18N>;
+  tags: Array<TagShape>;
 }
 
 const Company = styled.h4`
   font-weight: 400;
-  margin: 0.3rem 0;
+  margin: 0.5rem 0;
+  color: ${(props) => props.theme.colors.primary[50]};
 `;
 
 const Container = styled.div<{ borderWidth: number }>`
@@ -31,6 +41,19 @@ const Container = styled.div<{ borderWidth: number }>`
   flex-wrap: wrap;
   margin-bottom: 1.5rem;
 
+`;
+
+const CarouselContainer = styled.div`
+  width: 200px;
+  margin-left: auto;
+
+  margin-right: auto;
+  height: 150px;
+
+  @media (min-width: 600px) {
+    margin-right: 1rem;
+    height: 300px;
+  }
 `;
 
 const Content = styled.div`
@@ -44,20 +67,27 @@ const DescList = styled.ul`
 
 const DescItem = styled.li`
   margin-bottom: 0.5rem;
+  color: ${(props) => props.theme.colors.primary[50]};
 `;
 
 const Duration = styled.h5`
   margin-top: 0.4rem;
-  font-weight: 300;
-  color: #777;
+  font-weight: 500;
+  color: ${(props) => props.theme.colors.primary[100]};
 `;
 
-const Clickable = styled.a`
-  color: ${(props) => props.theme.colors.primary[900]};
+const Link = styled.a`
+  margin: 0;
+`;
 
-  &:hover {
-    color: ${(props) => props.theme.colors.primary[700]};
-  }
+const MyImage = styled.div<{ src: string }>`
+  margin: auto;
+  width: 100%;
+  height: 9rem;
+  background: url(${(props) => props.src});
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 `;
 
 const TagsContainer = styled.div`
@@ -69,18 +99,17 @@ const TagsContainer = styled.div`
 
 const Title = styled.h3`
   margin: 0;
+  color ${(props) => props.theme.colors.primary[500]};
 `;
 
 const Thumbnail = styled.div<{ src: string }>`
+  margin: auto;
   width: 7rem;
   height: 7rem;
   background: url(${(props) => props.src});
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
-
-  margin-right: 1rem;
-  margin-bottom: 1rem;
 `;
 
 const Trans: { [x: string]: I18N } = {
@@ -103,7 +132,9 @@ const ProfileExperienceItem: React.FC<ProfileExperienceItemProps> = ({
   descriptions,
   dateFrom,
   dateTo,
+  handleTagClick,
   lang,
+  images,
   isPartTime,
   isLast,
   link,
@@ -111,37 +142,75 @@ const ProfileExperienceItem: React.FC<ProfileExperienceItemProps> = ({
   title,
   thumbnail,
 }) => {
+  const [idx, setIdx] = React.useState(0);
+  const [isCursored, setIsCursored] = React.useState(false);
+
   const years = dateTo.diff(dateFrom, "years");
-  const months = dateTo.diff(dateFrom, "months");
+  let months = dateTo.diff(dateFrom, "months") % 12;
+  if (!years && !months) months = 1;
+
   const isToday = Math.abs(dateTo.diff(new Date(), "days")) < 1;
 
   const toStr = isToday ? Trans.present[lang] : dateTo.format("MMM YY");
+
+  React.useEffect(() => {
+    if (isCursored) setIdx((o) => (o + 1) % (images.length + 1));
+
+    const clear = setInterval(
+      () => isCursored && setIdx((o) => (o + 1) % (images.length + 1)),
+      3000
+    );
+    return () => clearInterval(clear);
+  }, [setIdx, isCursored, images]);
+
+  const carousels = React.useMemo(
+    () => [
+      <Thumbnail key={`MyImage-thumbnail-${thumbnail}`} src={thumbnail} />,
+      ...images.map((src, idx) => (
+        <MyImage key={`MyImage-${idx}-${src}`} src={src} />
+      )),
+    ],
+    [thumbnail, images]
+  );
   return (
-    <Container borderWidth={isLast ? 0 : 1}>
-      <Thumbnail src={thumbnail} />
+    <Container
+      borderWidth={isLast ? 0 : 1}
+      onMouseEnter={() => setIsCursored(true)}
+      onMouseLeave={() => setIsCursored(false)}
+    >
+      <CarouselContainer>
+        <Carousel control={{ idx }}>{carousels}</Carousel>
+      </CarouselContainer>
       <Content>
         <Title>
           {title} - {isPartTime ? Trans.internship[lang] : Trans.fulltime[lang]}
         </Title>
         {!!link ? (
-          <Clickable
-            href={link}
-            target="_blank"
-            referrerPolicy="no-referrer"
-            rel="noreferrer"
-          >
-            <Company>{company}</Company>
-          </Clickable>
+          <Company>
+            <Link
+              href={link}
+              target="_blank"
+              referrerPolicy="no-referrer"
+              rel="noreferrer"
+            >
+              {company}
+            </Link>
+          </Company>
         ) : (
           <Company>{company}</Company>
         )}
         <Duration>
           {dateFrom.format("MMM YY")} - {toStr} / {!!years && `${years} yr`}{" "}
-          {months} mos
+          {!!months && `${months} mos`}
         </Duration>
         <TagsContainer>
           {tags.map((tag, idx) => (
-            <ProfileTag key={`ProfileTag-${idx}`}>{tag[lang]}</ProfileTag>
+            <ProfileTag
+              key={`ProfileTag-${idx}`}
+              onClick={() => handleTagClick(tag.id)}
+            >
+              {tag[lang]}
+            </ProfileTag>
           ))}
         </TagsContainer>
 

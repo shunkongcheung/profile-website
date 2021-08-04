@@ -7,15 +7,12 @@ interface ProfileScocialProps {
   lang: Lang;
 }
 
-const Container = styled.div`
-  margin-left: auto;
-  margin-right: auto;
-`;
+const Container = styled.div``;
 
 const SocialItem = styled.div`
   display: flex;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: 0.6rem;
 `;
 
 const Icon = styled.div<{ src: string }>`
@@ -24,15 +21,6 @@ const Icon = styled.div<{ src: string }>`
   background: url(${(props) => props.src});
   background-size: contain;
   background-position: center;
-`;
-
-const Clickable = styled.a`
-  margin-left: 1rem;
-  color: ${(props) => props.theme.colors.primary[900]};
-
-  &:hover {
-    color: ${(props) => props.theme.colors.primary[700]};
-  }
 `;
 
 const Social = [
@@ -62,9 +50,14 @@ const ProfileScocial: React.FC<ProfileScocialProps> = () => {
       {Social.map(({ id, name, url, src }) => (
         <SocialItem key={`SocialItem-${id}`}>
           <Icon src={src} />
-          <Clickable href={url} target="_blank" referrerPolicy="no-referrer">
+          <a
+            href={url}
+            target="_blank"
+            referrerPolicy="no-referrer"
+            rel="noreferrer"
+          >
             {name}
-          </Clickable>
+          </a>
         </SocialItem>
       ))}
     </Container>

@@ -7,6 +7,7 @@ interface ExpItem {
   descriptions: Array<string>;
   dateFrom: Moment;
   dateTo: Moment;
+  images: Array<string>;
   isPartTime?: boolean;
   link?: string;
   title: string;
@@ -64,6 +65,11 @@ const Educations: Array<ExpItem> = [
     link: "https://www.utoronto.ca",
     dateFrom: moment("2013-09-01"),
     dateTo: moment("2018-08-31"),
+    images: [
+      "/home-education-uoft-fencing-stage.png",
+      "/home-education-uoft-fencing-coach.png",
+      "/home-education-uoft-fencing-game.jpg",
+    ],
     tags: [Tags.uoft, Tags.toronto, Tags.fencing],
     title: "University of Toronto",
     company: "Bachelor of Applied Science (B.A.Sc.)",
@@ -74,10 +80,11 @@ const Educations: Array<ExpItem> = [
     link: "https://www.dbs.edu.hk/",
     dateFrom: moment("2007-09-01"),
     dateTo: moment("2013-08-31"),
+    images: [],
     tags: [Tags.dbs, Tags.hongKong, Tags.fencing],
     title: "Diocesan Boys' School",
     company: "Hong Kong Diploma of Secondary Education",
-    thumbnail: "/home-education-dbs.jpg",
+    thumbnail: "/home-education-dbs.png",
   },
 ];
 
@@ -91,6 +98,10 @@ const Experiences: Array<ExpItem> = [
       "Implemented a RFID badge scanning mobile application with react-native",
     ],
     link: "https://qmo.io/",
+    images: [
+      "/home-experience-qmo-spc.png",
+      "/home-experience-qmo-airmiles.png",
+    ],
     dateFrom: moment("2020-01-01"),
     dateTo: moment(),
     tags: [
@@ -119,6 +130,10 @@ const Experiences: Array<ExpItem> = [
     ],
     dateFrom: moment("2018-05-01"),
     dateTo: moment("2019-09-30"),
+    images: [
+      "/home-experience-radica-analytics.png",
+      "/home-experience-radica-riplus.png",
+    ],
     link: "https://www.radicasys.com/",
     tags: [
       Tags.radica,
@@ -142,6 +157,11 @@ const Experiences: Array<ExpItem> = [
     ],
     dateFrom: moment("2017-07-01"),
     dateTo: moment("2017-08-30"),
+    images: [
+      "/home-experience-hkbn-onsite.jpg",
+      "/home-experience-hkbn-router.jpg",
+      "/home-experience-hkbn-fiber.jpg",
+    ],
     isPartTime: true,
     link: "https://www.hkbn.net/",
     tags: [Tags.hkbn, Tags.hongKong, Tags.broadBand],
@@ -160,10 +180,11 @@ const Experiences: Array<ExpItem> = [
     dateFrom: moment("2017-05-01"),
     dateTo: moment("2017-06-30"),
     tags: [Tags.sickKids, Tags.toronto, Tags.cSharp, Tags.msAccss],
+    images: ["/home-experience-sickkids-ms-access.png"],
     isPartTime: true,
     title: "Data management intern",
     company: "The Hospital for Sick Children",
-    thumbnail: "/home-experience-qmo.jpg",
+    thumbnail: "/home-experience-sickkids.png",
   },
   {
     descriptions: [
@@ -176,10 +197,11 @@ const Experiences: Array<ExpItem> = [
     dateFrom: moment("2015-06-01"),
     dateTo: moment("2016-06-30"),
     tags: [Tags.hsbc, Tags.hongKong, Tags.cSharp, Tags.msExcel, Tags.adobe],
+    images: ["/home-experience-hsbc-csharp.png"],
     isPartTime: true,
     title: "Technology & Service Industrial Placement",
     company: "Hong Kong&Shanghai Banking Corp.Limited.(H.S.B.C)",
-    thumbnail: "/home-experience-hsbc.jpg",
+    thumbnail: "/home-experience-hsbc.png",
   },
   {
     descriptions: [
@@ -192,10 +214,11 @@ const Experiences: Array<ExpItem> = [
     dateFrom: moment("2014-06-01"),
     dateTo: moment("2014-08-30"),
     tags: [Tags.clp, Tags.hongKong],
+    images: [],
     isPartTime: true,
     title: "Summer Intern",
     company: "CLP Holdings Limited ",
-    thumbnail: "/home-experience-clp.jpg",
+    thumbnail: "/home-experience-clp.png",
   },
   {
     descriptions: [
@@ -207,6 +230,7 @@ const Experiences: Array<ExpItem> = [
     link: "https://www.maximsmx.com.hk/",
     dateFrom: moment("2013-06-01"),
     dateTo: moment("2013-08-30"),
+    images: [],
     tags: [Tags.maxim, Tags.hongKong],
     isPartTime: false,
     title: "Contract Worker",
@@ -223,6 +247,7 @@ const Experiences: Array<ExpItem> = [
     dateFrom: moment("2012-07-01"),
     dateTo: moment("2012-08-30"),
     tags: [Tags.hongKong],
+    images: [],
     isPartTime: true,
     title: "Summer Intern, Legal",
     company: "T.K.Tsui & Co.",
@@ -235,6 +260,7 @@ const Experiences: Array<ExpItem> = [
     ],
     dateFrom: moment("2012-05-01"),
     dateTo: moment("2012-05-30"),
+    images: [],
     link: "https://www3.ha.org.hk/ndh/index_e.asp",
     tags: [Tags.hongKong],
     isPartTime: true,
