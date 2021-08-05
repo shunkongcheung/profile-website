@@ -8,7 +8,7 @@ import { Carousel } from "../../components";
 import ProfileTag from "./ProfileTag";
 
 interface TagShape extends I18N {
-  id: string;
+  name: string;
 }
 
 interface ProfileExperienceItemProps {
@@ -23,7 +23,6 @@ interface ProfileExperienceItemProps {
   lang: Lang;
   link?: string;
   title: string;
-  thumbnail: string;
   tags: Array<TagShape>;
 }
 
@@ -50,15 +49,15 @@ const CarouselContainer = styled.div`
   margin-right: auto;
   height: 150px;
 
-  @media (min-width: 600px) {
-    margin-right: 1rem;
+  @media (min-width: ${(props) => props.theme.breakpoints.sm}px) {
     height: 300px;
   }
 `;
 
 const Content = styled.div`
   flex: 1;
-  max-width: 100%;
+  max-width: calc(100% - 2rem);
+  padding: 0 2rem;
 `;
 
 const DescList = styled.ul`
@@ -140,7 +139,6 @@ const ProfileExperienceItem: React.FC<ProfileExperienceItemProps> = ({
   link,
   tags,
   title,
-  thumbnail,
 }) => {
   const [idx, setIdx] = React.useState(0);
   const [isCursored, setIsCursored] = React.useState(false);
@@ -157,21 +155,12 @@ const ProfileExperienceItem: React.FC<ProfileExperienceItemProps> = ({
     if (isCursored) setIdx((o) => (o + 1) % (images.length + 1));
 
     const clear = setInterval(
-      () => isCursored && setIdx((o) => (o + 1) % (images.length + 1)),
+      () => isCursored && setIdx((o) => (o + 1) % images.length),
       3000
     );
     return () => clearInterval(clear);
   }, [setIdx, isCursored, images]);
 
-  const carousels = React.useMemo(
-    () => [
-      <Thumbnail key={`MyImage-thumbnail-${thumbnail}`} src={thumbnail} />,
-      ...images.map((src, idx) => (
-        <MyImage key={`MyImage-${idx}-${src}`} src={src} />
-      )),
-    ],
-    [thumbnail, images]
-  );
   return (
     <Container
       borderWidth={isLast ? 0 : 1}
@@ -179,7 +168,11 @@ const ProfileExperienceItem: React.FC<ProfileExperienceItemProps> = ({
       onMouseLeave={() => setIsCursored(false)}
     >
       <CarouselContainer>
-        <Carousel control={{ idx }}>{carousels}</Carousel>
+        <Carousel control={{ idx }}>
+          {images.map((src, idx) => (
+            <MyImage key={`MyImage-${idx}-${src}`} src={src} />
+          ))}
+        </Carousel>
       </CarouselContainer>
       <Content>
         <Title>
@@ -207,7 +200,7 @@ const ProfileExperienceItem: React.FC<ProfileExperienceItemProps> = ({
           {tags.map((tag, idx) => (
             <ProfileTag
               key={`ProfileTag-${idx}`}
-              onClick={() => handleTagClick(tag.id)}
+              onClick={() => handleTagClick(tag.name)}
             >
               {tag[lang]}
             </ProfileTag>

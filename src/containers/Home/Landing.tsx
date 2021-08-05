@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import styled from "styled-components";
+import styled, { useTheme } from "styled-components";
 
 import { Carousel } from "../../components";
 import { useWindowSize } from "../../hooks";
@@ -37,7 +37,7 @@ const CarouselContainer = styled.div`
   width: 100%;
   height: 250px;
 
-  @media (min-width: 600px) {
+  @media (min-width: ${(props) => props.theme.breakpoints.sm}px) {
     height: 500px;
   }
 `;
@@ -58,7 +58,7 @@ const Name = styled.h1`
   color: ${(props) => props.theme.colors.primary[500]};
 
   font-size: 1.5rem;
-  @media (min-width: 700px) {
+  @media (min-width: ${(props) => props.theme.breakpoints.sm}px) {
     font-size: 2rem;
   }
 `;
@@ -83,6 +83,8 @@ const TRANS: { [x: string]: I18N } = {
 const Landing: React.FC<LandingProps> = ({ lang = "en" }) => {
   const [idx, setIdx] = React.useState(0);
   const { width } = useWindowSize();
+  const theme = useTheme();
+
   React.useEffect(() => {
     const clear = setInterval(() => setIdx((o) => (o + 1) % 3), 5000);
     return () => clearInterval(clear);
@@ -96,7 +98,7 @@ const Landing: React.FC<LandingProps> = ({ lang = "en" }) => {
       </Content>
       <CarouselContainer>
         <Carousel control={{ idx }}>
-          {width > 600
+          {width > (theme as any).breakpoints.sm
             ? [
                 <ThreeDImage
                   key="LandingCarouselAnimate-1"

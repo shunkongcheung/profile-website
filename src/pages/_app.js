@@ -15,6 +15,9 @@ const theme = {
       900: "#881337",
     },
   },
+  breakpoints: {
+    sm: 600
+  }
 };
 
 const GlobalStyle = createGlobalStyle`
