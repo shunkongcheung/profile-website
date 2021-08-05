@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import { Moment } from "moment";
+import moment from "moment";
 import styled from "styled-components";
 
 import { Lang } from "../../types";
@@ -9,20 +9,19 @@ import Profile from "./Profile";
 
 interface HomeProps {
   lang: Lang;
-  experiences: Array<Experience>;
-  educations: Array<Experience>;
-  tags: Array<Tag>;
+  jobs: Array<Job>;
 }
 
-interface Experience {
+interface Job {
   id: number;
+  images: Array<string>;
   companyName: string;
   companyUrl: string;
   title: string;
-  dateFrom: Moment;
-  dateTo: Moment;
+  dateFrom: string;
+  dateTo: string;
+  isEducation: boolean;
   isPartTime: boolean;
-  images: Array<string>;
   descriptions: Array<string>;
   tags: Array<Tag>;
 }
@@ -48,7 +47,39 @@ const Content = styled.div`
   max-width: 1050px;
 `;
 
-const Home: React.FC<HomeProps> = ({ lang, experiences, educations, tags }) => {
+const Home: React.FC<HomeProps> = ({ lang, jobs }) => {
+  const allExps = React.useMemo(
+    () =>
+      jobs.map((itm) => ({
+        id: itm.id,
+        images: itm.images.map(
+          (itm) =>
+            `https://home-backend.shunkongcheung.com/static/resume-images/${itm}`
+        ),
+        companyName: itm.companyName,
+        companyUrl: itm.companyUrl,
+        title: itm.title,
+        dateFrom: moment(itm.dateFrom),
+        dateTo: !!itm.dateTo ? moment(itm.dateTo) : moment(),
+        isEducation: itm.isEducation,
+        isPartTime: itm.isPartTime,
+        descriptions: itm.descriptions,
+        tags: itm.tags,
+      })),
+    [jobs]
+  );
+
+  const experiences = allExps.filter((itm) => !itm.isEducation);
+  const educations = allExps.filter((itm) => !!itm.isEducation);
+
+  const tags = jobs.reduce((acc, itm) => {
+    itm.tags.map((tag) => {
+      const exist = acc.find((aItem) => aItem.name === tag.name);
+      if (!exist) acc.push({ name: tag.name, en: tag.en, zh: tag.zh });
+    });
+    return acc;
+  }, []);
+
   return (
     <Container>
       <Content>
