@@ -7,7 +7,6 @@ import {
 } from "@apollo/client";
 import moment from "moment";
 
-import Head from "next/head";
 import Home from "../containers/Home";
 
 const Jobs = gql`
@@ -62,17 +61,12 @@ export default function HomePage({ jobs }) {
   }, []);
 
   return (
-    <>
-      <Head>
-        <title> Welcome</title>
-      </Head>
-      <Home
-        lang="en"
-        experiences={experiences}
-        educations={educations}
-        tags={tags}
-      />
-    </>
+    <Home
+      lang="en"
+      experiences={experiences}
+      educations={educations}
+      tags={tags}
+    />
   );
 }
 
