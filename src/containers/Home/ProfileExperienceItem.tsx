@@ -49,15 +49,15 @@ const CarouselContainer = styled.div`
   margin-right: auto;
   height: 150px;
 
-  @media (min-width: 600px) {
-    margin-right: 1rem;
+  @media (min-width: ${(props) => props.theme.breakpoints.sm}px) {
     height: 300px;
   }
 `;
 
 const Content = styled.div`
   flex: 1;
-  max-width: 100%;
+  max-width: calc(100% - 2rem);
+  padding: 0 2rem;
 `;
 
 const DescList = styled.ul`
