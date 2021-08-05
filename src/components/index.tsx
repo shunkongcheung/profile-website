@@ -1,3 +1,4 @@
+import AppBar from "./AppBar";
 import Carousel from "./Carousel";
 
-export { Carousel };
+export { AppBar, Carousel };

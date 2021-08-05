@@ -1,4 +1,4 @@
-import { createGlobalStyle, ThemeProvider } from "styled-components";
+import styled, { createGlobalStyle, ThemeProvider } from "styled-components";
 
 const theme = {
   colors: {
@@ -16,8 +16,8 @@ const theme = {
     },
   },
   breakpoints: {
-    sm: 600
-  }
+    sm: 600,
+  },
 };
 
 const GlobalStyle = createGlobalStyle`
@@ -27,6 +27,7 @@ body {
   margin: 0;
   font-family: Roboto, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
     Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  background: #2d3e50;
 }
 
 a {
@@ -47,12 +48,30 @@ a {
 }
 `;
 
+const Container = styled.div`
+  display: flex;
+  padding: 1rem 3rem 1rem 3rem;
+
+  min-height: 100vh;
+`;
+
+const Content = styled.div`
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  max-width: 1050px;
+`;
+
 function MyApp({ Component, pageProps }) {
   return (
     <>
       <GlobalStyle />
       <ThemeProvider theme={theme}>
-        <Component {...pageProps} />
+        <Container>
+          <Content>
+            <Component {...pageProps} />
+          </Content>
+        </Container>
       </ThemeProvider>
     </>
   );
