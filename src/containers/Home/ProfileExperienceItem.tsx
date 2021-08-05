@@ -8,7 +8,7 @@ import { Carousel } from "../../components";
 import ProfileTag from "./ProfileTag";
 
 interface TagShape extends I18N {
-  id: string;
+  name: string;
 }
 
 interface ProfileExperienceItemProps {
@@ -23,7 +23,6 @@ interface ProfileExperienceItemProps {
   lang: Lang;
   link?: string;
   title: string;
-  thumbnail: string;
   tags: Array<TagShape>;
 }
 
@@ -140,7 +139,6 @@ const ProfileExperienceItem: React.FC<ProfileExperienceItemProps> = ({
   link,
   tags,
   title,
-  thumbnail,
 }) => {
   const [idx, setIdx] = React.useState(0);
   const [isCursored, setIsCursored] = React.useState(false);
@@ -163,15 +161,6 @@ const ProfileExperienceItem: React.FC<ProfileExperienceItemProps> = ({
     return () => clearInterval(clear);
   }, [setIdx, isCursored, images]);
 
-  const carousels = React.useMemo(
-    () => [
-      <Thumbnail key={`MyImage-thumbnail-${thumbnail}`} src={thumbnail} />,
-      ...images.map((src, idx) => (
-        <MyImage key={`MyImage-${idx}-${src}`} src={src} />
-      )),
-    ],
-    [thumbnail, images]
-  );
   return (
     <Container
       borderWidth={isLast ? 0 : 1}
@@ -179,7 +168,11 @@ const ProfileExperienceItem: React.FC<ProfileExperienceItemProps> = ({
       onMouseLeave={() => setIsCursored(false)}
     >
       <CarouselContainer>
-        <Carousel control={{ idx }}>{carousels}</Carousel>
+        <Carousel control={{ idx }}>
+          {images.map((src, idx) => (
+            <MyImage key={`MyImage-${idx}-${src}`} src={src} />
+          ))}
+        </Carousel>
       </CarouselContainer>
       <Content>
         <Title>
@@ -207,7 +200,7 @@ const ProfileExperienceItem: React.FC<ProfileExperienceItemProps> = ({
           {tags.map((tag, idx) => (
             <ProfileTag
               key={`ProfileTag-${idx}`}
-              onClick={() => handleTagClick(tag.id)}
+              onClick={() => handleTagClick(tag.name)}
             >
               {tag[lang]}
             </ProfileTag>
