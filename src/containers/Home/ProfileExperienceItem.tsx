@@ -101,16 +101,6 @@ const Title = styled.h3`
   color ${(props) => props.theme.colors.primary[500]};
 `;
 
-const Thumbnail = styled.div<{ src: string }>`
-  margin: auto;
-  width: 7rem;
-  height: 7rem;
-  background: url(${(props) => props.src});
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-`;
-
 const Trans: { [x: string]: I18N } = {
   fulltime: {
     en: "fulltime",
@@ -120,9 +110,17 @@ const Trans: { [x: string]: I18N } = {
     en: "internship",
     zh: "實習",
   },
+  month: {
+    en: "mos",
+    zh: "月",
+  },
   present: {
     en: "present",
     zh: "現在",
+  },
+  year: {
+    en: "yrs",
+    zh: "年",
   },
 };
 
@@ -193,8 +191,9 @@ const ProfileExperienceItem: React.FC<ProfileExperienceItemProps> = ({
           <Company>{company}</Company>
         )}
         <Duration>
-          {dateFrom.format("MMM YY")} - {toStr} / {!!years && `${years} yr`}{" "}
-          {!!months && `${months} mos`}
+          {dateFrom.format("MMM YY")} - {toStr} /{" "}
+          {!!years && `${years} ${Trans.year[lang]}`}{" "}
+          {!!months && `${months} ${Trans.month[lang]}`}
         </Duration>
         <TagsContainer>
           {tags.map((tag, idx) => (
