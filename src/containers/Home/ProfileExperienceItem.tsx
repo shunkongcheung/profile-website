@@ -155,7 +155,7 @@ const ProfileExperienceItem: React.FC<ProfileExperienceItemProps> = ({
     if (isCursored) setIdx((o) => (o + 1) % (images.length + 1));
 
     const clear = setInterval(
-      () => isCursored && setIdx((o) => (o + 1) % (images.length + 1)),
+      () => isCursored && setIdx((o) => (o + 1) % images.length),
       3000
     );
     return () => clearInterval(clear);
