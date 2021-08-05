@@ -152,7 +152,7 @@ const ProfileExperienceItem: React.FC<ProfileExperienceItemProps> = ({
   const toStr = isToday ? Trans.present[lang] : dateTo.format("MMM YY");
 
   React.useEffect(() => {
-    if (isCursored) setIdx((o) => (o + 1) % (images.length + 1));
+    if (isCursored) setIdx((o) => (o + 1) % images.length);
 
     const clear = setInterval(
       () => isCursored && setIdx((o) => (o + 1) % images.length),
