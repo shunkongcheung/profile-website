@@ -6,6 +6,7 @@ import { Lang } from "../../types";
 
 import Landing from "./Landing";
 import Profile from "./Profile";
+import { AppBar } from "../../components";
 
 interface HomeProps {
   lang: Lang;
@@ -33,18 +34,7 @@ interface Tag {
 }
 
 const Container = styled.div`
-  display: flex;
-  background: #2d3e50;
-  padding: 3rem 1rem;
-
-  min-height: 100vh;
-`;
-
-const Content = styled.div`
-  margin-left: auto;
-  margin-right: auto;
   width: 100%;
-  max-width: 1050px;
 `;
 
 const Home: React.FC<HomeProps> = ({ lang, jobs }) => {
@@ -82,15 +72,14 @@ const Home: React.FC<HomeProps> = ({ lang, jobs }) => {
 
   return (
     <Container>
-      <Content>
-        <Landing lang={lang} />
-        <Profile
-          lang={lang}
-          experiences={experiences}
-          educations={educations}
-          tags={tags}
-        />
-      </Content>
+      <AppBar lang={lang} />
+      <Landing lang={lang} />
+      <Profile
+        lang={lang}
+        experiences={experiences}
+        educations={educations}
+        tags={tags}
+      />
     </Container>
   );
 };
