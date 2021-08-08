@@ -11,6 +11,7 @@ import SocialLinks from "./SocialLinks";
 import TagList from "./TagList";
 import Tools from "./Tools";
 import useTags from "./useTags";
+import HighlightList from "./HighlightList";
 
 interface HomeProps {
   lang: Lang;
@@ -23,6 +24,8 @@ interface Highlight {
   id: number;
   nameEn: string;
   nameZh: string;
+  descEn: string;
+  descZh: string;
   thumbnail: string;
   tags: Array<{ name: string }>;
 }
@@ -150,7 +153,8 @@ const Home: React.FC<HomeProps> = ({ lang, highlights, jobs, tools }) => {
       highlights.map((highlight) => ({
         id: highlight.id,
         name: { en: highlight.nameEn, zh: highlight.nameZh },
-        thumbnail: highlight.thumbnail,
+        desc: { en: highlight.descEn, zh: highlight.descZh },
+        thumbnail: `https://home-backend.shunkongcheung.com/static/highlights/${highlight.thumbnail}`,
         tags: tags.filter(
           (aTag) => !!highlight.tags.find((hTag) => hTag.name === aTag.name)
         ),
@@ -191,6 +195,7 @@ const Home: React.FC<HomeProps> = ({ lang, highlights, jobs, tools }) => {
         handleRef={(ref) => (toolRef.current = ref)}
       />
       <TagList lang={lang} tagIds={tagIds} tags={tags} handleTag={handleTag} />
+      <HighlightList lang={lang} highlights={tHighlights} />
       <ExperienceList
         lang={lang}
         data={experiences}
