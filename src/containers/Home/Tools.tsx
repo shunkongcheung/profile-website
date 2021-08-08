@@ -1,5 +1,7 @@
 import React, { memo } from "react";
 import styled, { css, keyframes } from "styled-components";
+
+import { Heading } from "../../components";
 import { useInViewport } from "../../hooks";
 import { Lang, I18N } from "../../types";
 
@@ -34,7 +36,7 @@ const animate = css`
   animation: ${bounceIn} 0.5s linear forwards, ${fadeIn} 0.5s linear forwards;
 `;
 
-const Heading = styled.h3<{ isVisible: boolean }>`
+const MyHeading = styled(Heading)<{ isVisible: boolean }>`
   margin-top: 3rem;
   font-size: 2rem;
   color: ${(props) => props.theme.colors.primary[50]};
@@ -119,7 +121,7 @@ const Tools: React.FC<ToolsProps> = ({ tools, lang, handleRef }) => {
         handleRef(ref);
       }}
     >
-      <Heading isVisible={isVisible}>{Trans.heading[lang]}</Heading>
+      <MyHeading isVisible={isVisible}>{Trans.heading[lang]}</MyHeading>
       <Row isVisible={isVisible}>
         {tools.map((tool) => (
           <Item key={`ToolItem-${tool.name}`}>

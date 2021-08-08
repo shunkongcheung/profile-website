@@ -5,6 +5,7 @@ import { Moment } from "moment";
 import { Lang } from "../../types";
 
 import ExperienceItem from "./ExperienceItem";
+import { Heading } from "../../components";
 
 interface ProfileProps {
   data: Array<Experience>;
@@ -38,12 +39,6 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   margin-top: 5rem;
-`;
-
-const Heading = styled.h3`
-  margin-top: 3rem;
-  font-size: 2rem;
-  color: ${(props) => props.theme.colors.primary[50]};
 `;
 
 const Profile: React.FC<ProfileProps> = ({
