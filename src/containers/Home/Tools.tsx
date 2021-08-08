@@ -5,6 +5,7 @@ import { Lang, I18N } from "../../types";
 
 interface ToolsProps {
   lang: Lang;
+  handleRef: (ref?: HTMLElement) => any;
   tools: Array<Tool>;
 }
 
@@ -66,7 +67,7 @@ const Icon = styled.div<{ src: string }>`
 const Item = styled.div`
   margin: 10px ${SPACE}px;
 
-  transition: transform 0.2s ease-in;
+  transition: transform 0.1s ease-in-out;
   &:hover {
     transform: scale(1.2);
   }
@@ -98,10 +99,15 @@ const Trans: { [x: string]: I18N } = {
   },
 };
 
-const Tools: React.FC<ToolsProps> = ({ tools, lang }) => {
-  const { isVisible, handleRef } = useInViewport("0px");
+const Tools: React.FC<ToolsProps> = ({ tools, lang, handleRef }) => {
+  const { isVisible, handleRef: handleVRef } = useInViewport("-100px");
   return (
-    <Container ref={handleRef}>
+    <Container
+      ref={(ref) => {
+        handleVRef(ref);
+        handleRef(ref);
+      }}
+    >
       <Heading isVisible={isVisible}>{Trans.heading[lang]}</Heading>
       <Row isVisible={isVisible}>
         {tools.map((tool) => (

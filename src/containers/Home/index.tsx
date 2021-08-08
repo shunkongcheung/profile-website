@@ -1,6 +1,6 @@
 import React, { memo } from "react";
 import moment from "moment";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
 import { Lang } from "../../types";
 
@@ -42,11 +42,55 @@ interface Tool {
   icon: string;
 }
 
+const bounce = keyframes`
+0% { transform: translateY(0px); }
+50% { transform: translateY(-20px); }
+`;
+
+const ArrowDown = styled.div`
+  width: 50px;
+  height: 30px;
+  background: url(/arrow-down.svg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  cursor: pointer;
+
+  animation: ${bounce} 1s;
+  animation-iteration-count: 3;
+`;
+
+const DownBtn = styled.button`
+  background: transparent;
+  border: 0;
+`;
+
+const BtnContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
 const Container = styled.div`
   width: 100%;
 `;
 
+const LandContainer = styled.div`
+  height: calc(100vh - 80px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+
+  border: 1px sold red;
+`;
+
 const Home: React.FC<HomeProps> = ({ lang, jobs, tools }) => {
+  const toolRef = React.useRef<HTMLElement>();
+
+  const handleScroll = React.useCallback(() => {
+    if (!toolRef.current) return;
+    toolRef.current.scrollIntoView({ behavior: "smooth" });
+  }, [toolRef]);
+
   const allExps = React.useMemo(
     () =>
       jobs.map((itm) => ({
@@ -88,12 +132,27 @@ const Home: React.FC<HomeProps> = ({ lang, jobs, tools }) => {
     [tools]
   );
 
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <Container>
       <AppBar />
-      <Landing lang={lang} />
-      <ProfileSocial lang={lang} />
-      <Tools lang={lang} tools={tTools} />
+      <LandContainer>
+        <Landing lang={lang} />
+        <ProfileSocial lang={lang} />
+        <BtnContainer>
+          <DownBtn onClick={handleScroll}>
+            <ArrowDown />
+          </DownBtn>
+        </BtnContainer>
+      </LandContainer>
+      <Tools
+        lang={lang}
+        tools={tTools}
+        handleRef={(ref) => (toolRef.current = ref)}
+      />
       <Profile
         lang={lang}
         experiences={experiences}
