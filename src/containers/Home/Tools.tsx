@@ -1,5 +1,6 @@
 import React, { memo } from "react";
-import styled from "styled-components";
+import styled, { css, keyframes } from "styled-components";
+import { useInViewport } from "../../hooks";
 import { Lang, I18N } from "../../types";
 
 interface ToolsProps {
@@ -17,19 +18,40 @@ const SPACE = 20;
 
 const Container = styled.div``;
 
-const Heading = styled.h3`
+const bounceIn = keyframes`
+0%, 20%, 50%, 80%, 100% {transform: translateY(0);} 
+40% {transform: translateY(-30px);} 
+60% {transform: translateY(-15px);} 
+`;
+
+const fadeIn = keyframes`
+0% { opacity: 0;}
+100% { opacity: 1;}
+`;
+
+const animate = css`
+  animation: ${bounceIn} 0.5s linear forwards, ${fadeIn} 0.5s linear forwards;
+`;
+
+const Heading = styled.h3<{ isVisible: boolean }>`
   margin-top: 3rem;
   font-size: 2rem;
   color: ${(props) => props.theme.colors.primary[50]};
+
+  visibility: ${(props) => (props.isVisible ? "visible" : "hidden")};
+  ${(props) => !!props.isVisible && animate};
 `;
 
-const Row = styled.div`
+const Row = styled.div<{ isVisible: boolean }>`
   display: flex;
   flex-wrap: wrap;
 
   padding: 10px;
   background: ${(props) => props.theme.colors.primary[50]};
   border-radius: 5px;
+
+  visibility: ${(props) => (props.isVisible ? "visible" : "hidden")};
+  ${(props) => !!props.isVisible && animate};
 `;
 
 const Icon = styled.div<{ src: string }>`
@@ -77,10 +99,11 @@ const Trans: { [x: string]: I18N } = {
 };
 
 const Tools: React.FC<ToolsProps> = ({ tools, lang }) => {
+  const { isVisible, handleRef } = useInViewport("0px");
   return (
-    <Container>
-      <Heading>{Trans.heading[lang]}</Heading>
-      <Row>
+    <Container ref={handleRef}>
+      <Heading isVisible={isVisible}>{Trans.heading[lang]}</Heading>
+      <Row isVisible={isVisible}>
         {tools.map((tool) => (
           <Item key={`ToolItem-${tool.name}`}>
             <Icon src={tool.icon} />
