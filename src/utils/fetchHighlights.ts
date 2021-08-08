@@ -6,6 +6,8 @@ interface Highlight {
   id: number;
   nameEn: string;
   nameZh: string;
+  descEn: string;
+  descZh: string;
   thumbnail: string;
   tags: Array<{ name: string }>;
 }
@@ -16,6 +18,8 @@ const Highlights = gql`
       id
       nameEn
       nameZh
+      descEn
+      descZh
       thumbnail
       tags {
         name
