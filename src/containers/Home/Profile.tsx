@@ -6,7 +6,6 @@ import { I18N, Lang } from "../../types";
 
 import ProfileExperienceItem from "./ProfileExperienceItem";
 import ProfileTag from "./ProfileTag";
-import ProfileSocial from "./ProfileSocial";
 
 interface ProfileProps {
   lang: Lang;
