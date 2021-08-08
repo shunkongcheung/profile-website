@@ -12,8 +12,17 @@ import { AppBar } from "../../components";
 
 interface HomeProps {
   lang: Lang;
+  highlights: Array<Highlight>;
   jobs: Array<Job>;
   tools: Array<Tool>;
+}
+
+interface Highlight {
+  id: number;
+  nameEn: string;
+  nameZh: string;
+  thumbnail: string;
+  tags: Array<{ name: string }>;
 }
 
 interface Job {
@@ -83,7 +92,7 @@ const LandContainer = styled.div`
   border: 1px sold red;
 `;
 
-const Home: React.FC<HomeProps> = ({ lang, jobs, tools }) => {
+const Home: React.FC<HomeProps> = ({ lang, highlights, jobs, tools }) => {
   const toolRef = React.useRef<HTMLElement>();
 
   const handleScroll = React.useCallback(() => {
@@ -122,6 +131,19 @@ const Home: React.FC<HomeProps> = ({ lang, jobs, tools }) => {
     });
     return acc;
   }, []);
+
+  const tHighlights = React.useMemo(
+    () =>
+      highlights.map((highlight) => ({
+        id: highlight.id,
+        name: { en: highlight.nameEn, zh: highlight.nameZh },
+        thumbnail: highlight.thumbnail,
+        tags: tags.filter(
+          (aTag) => !!highlight.tags.find((hTag) => hTag.name === aTag.name)
+        ),
+      })),
+    [highlights, tags]
+  );
 
   const tTools = React.useMemo(
     () =>
