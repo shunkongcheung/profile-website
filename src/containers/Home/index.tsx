@@ -2,18 +2,32 @@ import React, { memo } from "react";
 import moment from "moment";
 import styled, { keyframes } from "styled-components";
 
-import { Lang } from "../../types";
+import { AppBar } from "../../components";
+import { Lang, I18N } from "../../types";
 
 import Landing from "./Landing";
-import Profile from "./Profile";
-import ProfileSocial from "./ProfileSocial";
+import ExperienceList from "./ExperienceList";
+import SocialLinks from "./SocialLinks";
+import TagList from "./TagList";
 import Tools from "./Tools";
-import { AppBar } from "../../components";
+import useTags from "./useTags";
+import HighlightList from "./HighlightList";
 
 interface HomeProps {
   lang: Lang;
+  highlights: Array<Highlight>;
   jobs: Array<Job>;
   tools: Array<Tool>;
+}
+
+interface Highlight {
+  id: number;
+  nameEn: string;
+  nameZh: string;
+  descEn: string;
+  descZh: string;
+  thumbnail: string;
+  tags: Array<{ name: string }>;
 }
 
 interface Job {
@@ -83,7 +97,18 @@ const LandContainer = styled.div`
   border: 1px sold red;
 `;
 
-const Home: React.FC<HomeProps> = ({ lang, jobs, tools }) => {
+const Trans: { [x: string]: I18N } = {
+  experience: {
+    en: "Experiences",
+    zh: "經驗",
+  },
+  education: {
+    en: "Education",
+    zh: "學歷",
+  },
+};
+
+const Home: React.FC<HomeProps> = ({ lang, highlights, jobs, tools }) => {
   const toolRef = React.useRef<HTMLElement>();
 
   const handleScroll = React.useCallback(() => {
@@ -123,6 +148,20 @@ const Home: React.FC<HomeProps> = ({ lang, jobs, tools }) => {
     return acc;
   }, []);
 
+  const tHighlights = React.useMemo(
+    () =>
+      highlights.map((highlight) => ({
+        id: highlight.id,
+        name: { en: highlight.nameEn, zh: highlight.nameZh },
+        desc: { en: highlight.descEn, zh: highlight.descZh },
+        thumbnail: `https://home-backend.shunkongcheung.com/static/highlights/${highlight.thumbnail}`,
+        tags: tags.filter(
+          (aTag) => !!highlight.tags.find((hTag) => hTag.name === aTag.name)
+        ),
+      })),
+    [highlights, tags]
+  );
+
   const tTools = React.useMemo(
     () =>
       tools.map((itm) => ({
@@ -131,6 +170,8 @@ const Home: React.FC<HomeProps> = ({ lang, jobs, tools }) => {
       })),
     [tools]
   );
+
+  const { tagIds, handleTag } = useTags(tags);
 
   React.useEffect(() => {
     window.scrollTo(0, 0);
@@ -141,7 +182,7 @@ const Home: React.FC<HomeProps> = ({ lang, jobs, tools }) => {
       <AppBar />
       <LandContainer>
         <Landing lang={lang} />
-        <ProfileSocial lang={lang} />
+        <SocialLinks lang={lang} />
         <BtnContainer>
           <DownBtn onClick={handleScroll}>
             <ArrowDown />
@@ -153,11 +194,21 @@ const Home: React.FC<HomeProps> = ({ lang, jobs, tools }) => {
         tools={tTools}
         handleRef={(ref) => (toolRef.current = ref)}
       />
-      <Profile
+      <TagList lang={lang} tagIds={tagIds} tags={tags} handleTag={handleTag} />
+      <HighlightList lang={lang} highlights={tHighlights} />
+      <ExperienceList
         lang={lang}
-        experiences={experiences}
-        educations={educations}
-        tags={tags}
+        data={experiences}
+        tagIds={tagIds}
+        handleTag={handleTag}
+        title={Trans.experience[lang]}
+      />
+      <ExperienceList
+        lang={lang}
+        data={educations}
+        tagIds={tagIds}
+        handleTag={handleTag}
+        title={Trans.education[lang]}
       />
     </Container>
   );

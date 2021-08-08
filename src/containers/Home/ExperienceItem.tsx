@@ -12,7 +12,7 @@ interface TagShape extends I18N {
   name: string;
 }
 
-interface ProfileExperienceItemProps {
+interface ExperienceItemProps {
   company: string;
   descriptions: Array<string>;
   dateFrom: Moment;
@@ -149,7 +149,7 @@ const Trans: { [x: string]: I18N } = {
   },
 };
 
-const ProfileExperienceItem: React.FC<ProfileExperienceItemProps> = ({
+const ExperienceItem: React.FC<ExperienceItemProps> = ({
   company,
   descriptions,
   dateFrom,
@@ -245,4 +245,4 @@ const ProfileExperienceItem: React.FC<ProfileExperienceItemProps> = ({
   );
 };
 
-export default memo(ProfileExperienceItem);
+export default memo(ExperienceItem);

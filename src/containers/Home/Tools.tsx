@@ -1,5 +1,7 @@
 import React, { memo } from "react";
 import styled, { css, keyframes } from "styled-components";
+
+import { Heading } from "../../components";
 import { useInViewport } from "../../hooks";
 import { Lang, I18N } from "../../types";
 
@@ -34,7 +36,7 @@ const animate = css`
   animation: ${bounceIn} 0.5s linear forwards, ${fadeIn} 0.5s linear forwards;
 `;
 
-const Heading = styled.h3<{ isVisible: boolean }>`
+const MyHeading = styled(Heading)<{ isVisible: boolean }>`
   margin-top: 3rem;
   font-size: 2rem;
   color: ${(props) => props.theme.colors.primary[50]};
@@ -48,8 +50,8 @@ const Row = styled.div<{ isVisible: boolean }>`
   flex-wrap: wrap;
 
   padding: 10px;
-  background: ${(props) => props.theme.colors.primary[50]};
   border-radius: 5px;
+  margin: 0 -${SPACE}px;
 
   visibility: ${(props) => (props.isVisible ? "visible" : "hidden")};
   ${(props) => !!props.isVisible && animate};
@@ -62,6 +64,17 @@ const Icon = styled.div<{ src: string }>`
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
+  position: relative;
+`;
+
+const IconBg = styled.div`
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  z-index: -1;
+  border-radius: 10px;
+  background: white;
 `;
 
 const Item = styled.div`
@@ -87,8 +100,8 @@ const Item = styled.div`
 
 const Name = styled.div`
   margin-top: 1rem;
-  font-size: 0.6rem;
-  color: ${(props) => props.theme.colors.primary[900]};
+  font-size: 0.8rem;
+  color: ${(props) => props.theme.colors.primary[200]};
   text-align: center;
 `;
 
@@ -108,11 +121,13 @@ const Tools: React.FC<ToolsProps> = ({ tools, lang, handleRef }) => {
         handleRef(ref);
       }}
     >
-      <Heading isVisible={isVisible}>{Trans.heading[lang]}</Heading>
+      <MyHeading isVisible={isVisible}>{Trans.heading[lang]}</MyHeading>
       <Row isVisible={isVisible}>
         {tools.map((tool) => (
           <Item key={`ToolItem-${tool.name}`}>
-            <Icon src={tool.icon} />
+            <Icon src={tool.icon}>
+              <IconBg />
+            </Icon>
             <Name>{tool.name}</Name>
           </Item>
         ))}
