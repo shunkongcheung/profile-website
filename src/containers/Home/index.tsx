@@ -7,9 +7,9 @@ import { Lang, I18N } from "../../types";
 
 import Landing from "./Landing";
 import ExperienceList from "./ExperienceList";
-import ProfileSocial from "./ProfileSocial";
-import Tools from "./Tools";
+import SocialLinks from "./SocialLinks";
 import TagList from "./TagList";
+import Tools from "./Tools";
 import useTags from "./useTags";
 
 interface HomeProps {
@@ -178,7 +178,7 @@ const Home: React.FC<HomeProps> = ({ lang, highlights, jobs, tools }) => {
       <AppBar />
       <LandContainer>
         <Landing lang={lang} />
-        <ProfileSocial lang={lang} />
+        <SocialLinks lang={lang} />
         <BtnContainer>
           <DownBtn onClick={handleScroll}>
             <ArrowDown />

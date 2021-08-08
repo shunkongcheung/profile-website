@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 import { Lang } from "../../types";
 
-interface ProfileScocialProps {
+interface SocialLinksProps {
   lang: Lang;
 }
 
@@ -52,7 +52,7 @@ const Social = [
   },
 ];
 
-const ProfileScocial: React.FC<ProfileScocialProps> = () => {
+const SocialLinks: React.FC<SocialLinksProps> = () => {
   return (
     <Container>
       <Content>
@@ -74,4 +74,4 @@ const ProfileScocial: React.FC<ProfileScocialProps> = () => {
   );
 };
 
-export default memo(ProfileScocial);
+export default memo(SocialLinks);
