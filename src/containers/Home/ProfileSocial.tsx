@@ -7,8 +7,16 @@ interface ProfileScocialProps {
   lang: Lang;
 }
 
-const Container = styled.div``;
+const Container = styled.div`
+  display: flex;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+`;
 
+const Content = styled.div`
+  margin-left: auto;
+  margin-right: auto;
+`;
 const SocialItem = styled.div`
   display: flex;
   align-items: center;
@@ -47,19 +55,21 @@ const Social = [
 const ProfileScocial: React.FC<ProfileScocialProps> = () => {
   return (
     <Container>
-      {Social.map(({ id, name, url, src }) => (
-        <SocialItem key={`SocialItem-${id}`}>
-          <Icon src={src} />
-          <a
-            href={url}
-            target="_blank"
-            referrerPolicy="no-referrer"
-            rel="noreferrer"
-          >
-            {name}
-          </a>
-        </SocialItem>
-      ))}
+      <Content>
+        {Social.map(({ id, name, url, src }) => (
+          <SocialItem key={`SocialItem-${id}`}>
+            <Icon src={src} />
+            <a
+              href={url}
+              target="_blank"
+              referrerPolicy="no-referrer"
+              rel="noreferrer"
+            >
+              {name}
+            </a>
+          </SocialItem>
+        ))}
+      </Content>
     </Container>
   );
 };

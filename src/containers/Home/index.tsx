@@ -6,11 +6,14 @@ import { Lang } from "../../types";
 
 import Landing from "./Landing";
 import Profile from "./Profile";
+import ProfileSocial from "./ProfileSocial";
+import Tools from "./Tools";
 import { AppBar } from "../../components";
 
 interface HomeProps {
   lang: Lang;
   jobs: Array<Job>;
+  tools: Array<Tool>;
 }
 
 interface Job {
@@ -33,11 +36,17 @@ interface Tag {
   zh: string;
 }
 
+interface Tool {
+  id: number;
+  name: string;
+  icon: string;
+}
+
 const Container = styled.div`
   width: 100%;
 `;
 
-const Home: React.FC<HomeProps> = ({ lang, jobs }) => {
+const Home: React.FC<HomeProps> = ({ lang, jobs, tools }) => {
   const allExps = React.useMemo(
     () =>
       jobs.map((itm) => ({
@@ -70,10 +79,21 @@ const Home: React.FC<HomeProps> = ({ lang, jobs }) => {
     return acc;
   }, []);
 
+  const tTools = React.useMemo(
+    () =>
+      tools.map((itm) => ({
+        ...itm,
+        icon: `https://home-backend.shunkongcheung.com/static/tools/${itm.icon}`,
+      })),
+    [tools]
+  );
+
   return (
     <Container>
-      <AppBar lang={lang} />
+      <AppBar />
       <Landing lang={lang} />
+      <ProfileSocial lang={lang} />
+      <Tools lang={lang} tools={tTools} />
       <Profile
         lang={lang}
         experiences={experiences}
