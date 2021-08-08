@@ -21,7 +21,6 @@ interface Tag {
 }
 
 const Container = styled.div`
-  margin: 0 auto;
   width: 400px;
   display: flex;
   flex-direction: column;

@@ -1,5 +1,7 @@
 import React, { memo } from "react";
 import styled from "styled-components";
+
+import { Heading } from "../../components";
 import { I18N, Lang } from "../../types";
 import HighlightItem from "./HighlightItem";
 
@@ -32,22 +34,39 @@ const Content = styled.div`
   display: flex;
   flex-wrap: wrap;
 
-  @media (min-width: 600px) {
-    margin-left: -${SPACE};
-    margin-right: -${SPACE};
+  justify-content: space-between;
+`;
+
+const ItemContainer = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  @media (min-width: 920px) {
+    justify-content: inherit;
+    width: inherit;
   }
 `;
+
+const Trans: { [x: string]: I18N } = {
+  heading: {
+    en: "Highlights",
+    zh: "焦點",
+  },
+};
 
 const HighlightList: React.FC<HighlightListProps> = ({ highlights, lang }) => {
   return (
     <Container>
+      <Heading>{Trans.heading[lang]}</Heading>
       <Content>
         {highlights.map((highlight) => (
-          <HighlightItem
-            {...highlight}
-            lang={lang}
-            key={`HighlightItem-${highlight.name.en}`}
-          />
+          <ItemContainer>
+            <HighlightItem
+              {...highlight}
+              lang={lang}
+              key={`HighlightItem-${highlight.name.en}`}
+            />
+          </ItemContainer>
         ))}
       </Content>
     </Container>
