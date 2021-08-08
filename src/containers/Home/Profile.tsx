@@ -47,11 +47,6 @@ const Heading = styled.h3`
   color: ${(props) => props.theme.colors.primary[50]};
 `;
 
-const ProfileSocialContainer = styled.div`
-  margin-left: auto;
-  margin-right: auto;
-`;
-
 const TagsContainer = styled.div`
   display: flex;
   max-width: min(100%, 500px);
@@ -59,7 +54,6 @@ const TagsContainer = styled.div`
   justify-content: center;
   margin-left: auto;
   margin-right: auto;
-  margin-bottom: 2rem;
 `;
 
 const Titles: { [x: string]: I18N } = {
@@ -133,9 +127,6 @@ const Profile: React.FC<ProfileProps> = ({
           </ProfileTag>
         ))}
       </TagsContainer>
-      <ProfileSocialContainer>
-        <ProfileSocial lang={lang} />
-      </ProfileSocialContainer>
       {!!filteredExperiences.length && (
         <Heading>{Titles.experience[lang]}</Heading>
       )}

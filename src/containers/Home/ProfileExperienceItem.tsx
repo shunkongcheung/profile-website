@@ -1,11 +1,12 @@
 import React, { memo } from "react";
-import styled from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 import { Moment } from "moment";
 
 import { Lang, I18N } from "../../types";
 
 import { Carousel } from "../../components";
 import ProfileTag from "./ProfileTag";
+import { useInViewport } from "../../hooks";
 
 interface TagShape extends I18N {
   name: string;
@@ -26,6 +27,20 @@ interface ProfileExperienceItemProps {
   tags: Array<TagShape>;
 }
 
+const bounceIn = keyframes`
+0% {transform: translateX(-15px);} 
+100% {transform: translateX(0px);} 
+`;
+
+const fadeIn = keyframes`
+0% { opacity: 0;}
+100% { opacity: 1;}
+`;
+
+const animate = css`
+  animation: ${bounceIn} 0.5s linear forwards, ${fadeIn} 0.5s linear forwards;
+`;
+
 const Company = styled.h4`
   font-weight: 400;
   margin: 0.5rem 0;
@@ -42,22 +57,32 @@ const Container = styled.div<{ borderWidth: number }>`
 
 `;
 
-const CarouselContainer = styled.div`
+const CarouselContainer = styled.div<{ isVisible: boolean }>`
   width: 200px;
   margin-left: auto;
 
   margin-right: auto;
   height: 150px;
 
+  visibility: ${(props) => (props.isVisible ? "visible" : "hidden")};
+  ${(props) => !!props.isVisible && animate};
+
   @media (min-width: ${(props) => props.theme.breakpoints.sm}px) {
     height: 300px;
   }
 `;
 
-const Content = styled.div`
+const Content = styled.div<{ isVisible: boolean }>`
   flex: 1;
-  max-width: calc(100% - 2rem);
-  padding: 0 2rem;
+
+  max-width: calc(100%);
+  @media (min-width: 600px) {
+    max-width: calc(100% - 2rem);
+    padding: 0 2rem;
+  }
+
+  visibility: ${(props) => (props.isVisible ? "visible" : "hidden")};
+  ${(props) => !!props.isVisible && animate};
 `;
 
 const DescList = styled.ul`
@@ -139,7 +164,8 @@ const ProfileExperienceItem: React.FC<ProfileExperienceItemProps> = ({
   title,
 }) => {
   const [idx, setIdx] = React.useState(0);
-  const [isCursored, setIsCursored] = React.useState(false);
+  // const [isCursored, setIsCursored] = React.useState(false);
+  const { isVisible, handleRef } = useInViewport("-25%");
 
   const years = dateTo.diff(dateFrom, "years");
   let months = dateTo.diff(dateFrom, "months") % 12;
@@ -149,30 +175,31 @@ const ProfileExperienceItem: React.FC<ProfileExperienceItemProps> = ({
 
   const toStr = isToday ? Trans.present[lang] : dateTo.format("MMM YY");
 
-  React.useEffect(() => {
-    if (isCursored) setIdx((o) => (o + 1) % images.length);
+  // React.useEffect(() => {
+  //   if (isCursored) setIdx((o) => (o + 1) % images.length);
 
-    const clear = setInterval(
-      () => isCursored && setIdx((o) => (o + 1) % images.length),
-      3000
-    );
-    return () => clearInterval(clear);
-  }, [setIdx, isCursored, images]);
+  //   const clear = setInterval(
+  //     () => isCursored && setIdx((o) => (o + 1) % images.length),
+  //     3000
+  //   );
+  //   return () => clearInterval(clear);
+  // }, [setIdx, isCursored, images]);
 
   return (
     <Container
       borderWidth={isLast ? 0 : 1}
-      onMouseEnter={() => setIsCursored(true)}
-      onMouseLeave={() => setIsCursored(false)}
+      // onMouseEnter={() => setIsCursored(true)}
+      // onMouseLeave={() => setIsCursored(false)}
+      ref={handleRef}
     >
-      <CarouselContainer>
+      <CarouselContainer isVisible={isVisible}>
         <Carousel control={{ idx }}>
           {images.map((src, idx) => (
             <MyImage key={`MyImage-${idx}-${src}`} src={src} />
           ))}
         </Carousel>
       </CarouselContainer>
-      <Content>
+      <Content isVisible={isVisible}>
         <Title>
           {title} - {isPartTime ? Trans.internship[lang] : Trans.fulltime[lang]}
         </Title>

@@ -50,7 +50,11 @@ a {
 
 const Container = styled.div`
   display: flex;
-  padding: 1rem 3rem 1rem 3rem;
+
+  padding: 1rem 1.5rem;
+  @media (min-width: 600px) {
+    padding: 1rem 3rem;
+  }
 
   min-height: 100vh;
 `;
