@@ -2,13 +2,15 @@ import React, { memo } from "react";
 import moment from "moment";
 import styled, { keyframes } from "styled-components";
 
-import { Lang } from "../../types";
+import { AppBar } from "../../components";
+import { Lang, I18N } from "../../types";
 
 import Landing from "./Landing";
-import Profile from "./Profile";
+import ExperienceList from "./ExperienceList";
 import ProfileSocial from "./ProfileSocial";
 import Tools from "./Tools";
-import { AppBar } from "../../components";
+import TagList from "./TagList";
+import useTags from "./useTags";
 
 interface HomeProps {
   lang: Lang;
@@ -92,6 +94,17 @@ const LandContainer = styled.div`
   border: 1px sold red;
 `;
 
+const Trans: { [x: string]: I18N } = {
+  experience: {
+    en: "Experiences",
+    zh: "經驗",
+  },
+  education: {
+    en: "Education",
+    zh: "學歷",
+  },
+};
+
 const Home: React.FC<HomeProps> = ({ lang, highlights, jobs, tools }) => {
   const toolRef = React.useRef<HTMLElement>();
 
@@ -154,6 +167,8 @@ const Home: React.FC<HomeProps> = ({ lang, highlights, jobs, tools }) => {
     [tools]
   );
 
+  const { tagIds, handleTag } = useTags(tags);
+
   React.useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -175,11 +190,20 @@ const Home: React.FC<HomeProps> = ({ lang, highlights, jobs, tools }) => {
         tools={tTools}
         handleRef={(ref) => (toolRef.current = ref)}
       />
-      <Profile
+      <TagList lang={lang} tagIds={tagIds} tags={tags} handleTag={handleTag} />
+      <ExperienceList
         lang={lang}
-        experiences={experiences}
-        educations={educations}
-        tags={tags}
+        data={experiences}
+        tagIds={tagIds}
+        handleTag={handleTag}
+        title={Trans.experience[lang]}
+      />
+      <ExperienceList
+        lang={lang}
+        data={educations}
+        tagIds={tagIds}
+        handleTag={handleTag}
+        title={Trans.education[lang]}
       />
     </Container>
   );
