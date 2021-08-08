@@ -100,7 +100,7 @@ const Trans: { [x: string]: I18N } = {
 };
 
 const Tools: React.FC<ToolsProps> = ({ tools, lang, handleRef }) => {
-  const { isVisible, handleRef: handleVRef } = useInViewport("-100px");
+  const { isVisible, handleRef: handleVRef } = useInViewport("-50%");
   return (
     <Container
       ref={(ref) => {

@@ -74,8 +74,12 @@ const CarouselContainer = styled.div<{ isVisible: boolean }>`
 
 const Content = styled.div<{ isVisible: boolean }>`
   flex: 1;
-  max-width: calc(100% - 2rem);
-  padding: 0 2rem;
+
+  max-width: calc(100%);
+  @media (min-width: 600px) {
+    max-width: calc(100% - 2rem);
+    padding: 0 2rem;
+  }
 
   visibility: ${(props) => (props.isVisible ? "visible" : "hidden")};
   ${(props) => !!props.isVisible && animate};
@@ -160,8 +164,8 @@ const ProfileExperienceItem: React.FC<ProfileExperienceItemProps> = ({
   title,
 }) => {
   const [idx, setIdx] = React.useState(0);
-  const [isCursored, setIsCursored] = React.useState(false);
-  const { isVisible, handleRef } = useInViewport("-100px");
+  // const [isCursored, setIsCursored] = React.useState(false);
+  const { isVisible, handleRef } = useInViewport("-25%");
 
   const years = dateTo.diff(dateFrom, "years");
   let months = dateTo.diff(dateFrom, "months") % 12;
@@ -171,21 +175,21 @@ const ProfileExperienceItem: React.FC<ProfileExperienceItemProps> = ({
 
   const toStr = isToday ? Trans.present[lang] : dateTo.format("MMM YY");
 
-  React.useEffect(() => {
-    if (isCursored) setIdx((o) => (o + 1) % images.length);
+  // React.useEffect(() => {
+  //   if (isCursored) setIdx((o) => (o + 1) % images.length);
 
-    const clear = setInterval(
-      () => isCursored && setIdx((o) => (o + 1) % images.length),
-      3000
-    );
-    return () => clearInterval(clear);
-  }, [setIdx, isCursored, images]);
+  //   const clear = setInterval(
+  //     () => isCursored && setIdx((o) => (o + 1) % images.length),
+  //     3000
+  //   );
+  //   return () => clearInterval(clear);
+  // }, [setIdx, isCursored, images]);
 
   return (
     <Container
       borderWidth={isLast ? 0 : 1}
-      onMouseEnter={() => setIsCursored(true)}
-      onMouseLeave={() => setIsCursored(false)}
+      // onMouseEnter={() => setIsCursored(true)}
+      // onMouseLeave={() => setIsCursored(false)}
       ref={handleRef}
     >
       <CarouselContainer isVisible={isVisible}>
