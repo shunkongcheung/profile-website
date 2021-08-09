@@ -4,6 +4,8 @@ import { useWindowSize } from "../hooks";
 
 const Container = styled.div<{ isAppear: boolean }>`
   bottom: 2rem;
+  margin-left: auto;
+  width: 50px;
   position: sticky;
   display: flex;
   justify-content: flex-end;
