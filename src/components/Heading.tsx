@@ -9,10 +9,19 @@ const Container = styled.h2`
 
 interface HeadingProps {
   children: string;
+  handleRef?: (ref: HTMLElement) => any;
 }
 
-const Heading: React.FC<HeadingProps> = ({ children }) => {
-  return <Container>{children}</Container>;
+const Heading: React.FC<HeadingProps> = ({ children, handleRef }) => {
+  return (
+    <Container
+      ref={(ref) => {
+        if (!!ref && !!handleRef) handleRef(ref);
+      }}
+    >
+      {children}
+    </Container>
+  );
 };
 
 export default memo(Heading);
