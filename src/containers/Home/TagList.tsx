@@ -2,7 +2,7 @@ import React, { memo } from "react";
 import styled from "styled-components";
 
 import { Lang } from "../../types";
-import ProfileTag from "./ProfileTag";
+import { TagItem } from "../../components";
 
 interface TagListProps {
   lang: Lang;
@@ -30,13 +30,13 @@ const TagList: React.FC<TagListProps> = ({ lang, tagIds, handleTag, tags }) => {
   return (
     <Container>
       {tags.map(({ name, ...itm }) => (
-        <ProfileTag
+        <TagItem
           key={`TagItem-${name}`}
           onClick={() => handleTag(name)}
           dehighlight={!tagIds.find((tagId) => tagId === name)}
         >
           {itm[lang]}
-        </ProfileTag>
+        </TagItem>
       ))}
     </Container>
   );

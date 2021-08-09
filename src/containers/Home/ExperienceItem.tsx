@@ -4,8 +4,7 @@ import { Moment } from "moment";
 
 import { Lang, I18N } from "../../types";
 
-import { Carousel } from "../../components";
-import ProfileTag from "./ProfileTag";
+import { Carousel, TagItem } from "../../components";
 import { useInViewport } from "../../hooks";
 
 interface TagShape extends I18N {
@@ -224,12 +223,12 @@ const ExperienceItem: React.FC<ExperienceItemProps> = ({
         </Duration>
         <TagsContainer>
           {tags.map((tag, idx) => (
-            <ProfileTag
+            <TagItem
               key={`ProfileTag-${idx}`}
               onClick={() => handleTagClick(tag.name)}
             >
               {tag[lang]}
-            </ProfileTag>
+            </TagItem>
           ))}
         </TagsContainer>
 
