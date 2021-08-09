@@ -28,6 +28,7 @@ const HamburgerBtn = styled.button`
   border: 0;
   flex-direction: column;
   justify-content: space-between;
+  cursor: pointer;
   div {
     width: 100%;
     height: 25%;
