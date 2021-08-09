@@ -5,18 +5,6 @@ import { useRouter } from "next/router";
 
 import { useWindowSize } from "../hooks";
 
-const Container = styled.div`
-  width: 100%;
-
-  padding-top: 1rem;
-  padding-bottom: 2rem;
-  display: flex;
-  z-index: 1;
-  top: 0;
-  position: sticky;
-  background: #2d3e50;
-`;
-
 const LinkContainer = styled.div`
   margin-left: auto;
 `;
@@ -113,6 +101,29 @@ const MobileNavItem = styled.button`
   cursor: pointer;
 `;
 
+const Container = styled.div`
+  display: flex;
+  padding-top: 1rem;
+  padding-bottom: 2rem;
+  top: 0;
+  z-index: 1;
+  position: sticky;
+  background: #2d3e50;
+
+  padding: 1rem 1.5rem;
+  @media (min-width: 600px) {
+    padding: 1rem 3rem;
+  }
+`;
+
+const Content = styled.div`
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  max-width: 1050px;
+  display: flex;
+`;
+
 interface AppBarProps {
   navs: Array<NavItem>;
 }
@@ -137,25 +148,27 @@ const AppBar: React.FC<AppBarProps> = ({ navs }) => {
   return (
     <>
       <Container>
-        <HamburgerBtn onClick={() => setOpen(true)}>
-          <div></div>
-          <div></div>
-          <div></div>
-        </HamburgerBtn>
-        <DesktopLinkContainer>
-          {navs.map(({ name, ref }) => (
-            <DesktopLink
-              key={`DesktopLink-${name}`}
-              onClick={() => ref.scrollIntoView({ behavior: "smooth" })}
-            >
-              {name}
-            </DesktopLink>
-          ))}
-        </DesktopLinkContainer>
-        <LinkContainer>
-          <Link href={`/en/${noLangPathname}`}>Eng</Link>
-          <Link href={`/zh/${noLangPathname}`}>中文</Link>
-        </LinkContainer>
+        <Content>
+          <HamburgerBtn onClick={() => setOpen(true)}>
+            <div></div>
+            <div></div>
+            <div></div>
+          </HamburgerBtn>
+          <DesktopLinkContainer>
+            {navs.map(({ name, ref }) => (
+              <DesktopLink
+                key={`DesktopLink-${name}`}
+                onClick={() => ref.scrollIntoView({ behavior: "smooth" })}
+              >
+                {name}
+              </DesktopLink>
+            ))}
+          </DesktopLinkContainer>
+          <LinkContainer>
+            <Link href={`/en/${noLangPathname}`}>Eng</Link>
+            <Link href={`/zh/${noLangPathname}`}>中文</Link>
+          </LinkContainer>
+        </Content>
       </Container>
       <MobileContainer open={open}>
         <Cross onClick={() => setOpen(false)} />

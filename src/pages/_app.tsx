@@ -49,34 +49,12 @@ a {
 }
 `;
 
-const Container = styled.div`
-  display: flex;
-
-  padding: 1rem 1.5rem;
-  @media (min-width: 600px) {
-    padding: 1rem 3rem;
-  }
-
-  min-height: 100vh;
-`;
-
-const Content = styled.div`
-  margin-left: auto;
-  margin-right: auto;
-  width: 100%;
-  max-width: 1050px;
-`;
-
 function MyApp({ Component, pageProps }) {
   return (
     <>
       <GlobalStyle />
       <ThemeProvider theme={theme}>
-        <Container>
-          <Content>
-            <Component {...pageProps} />
-          </Content>
-        </Container>
+        <Component {...pageProps} />
       </ThemeProvider>
     </>
   );

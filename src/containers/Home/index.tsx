@@ -2,7 +2,7 @@ import React, { memo } from "react";
 import moment from "moment";
 import styled, { keyframes } from "styled-components";
 
-import { AppBar, BackToTop } from "../../components";
+import { AppBar, BackToTop, SafeView } from "../../components";
 import { Lang, I18N } from "../../types";
 
 import Landing from "./Landing";
@@ -213,39 +213,46 @@ const Home: React.FC<HomeProps> = ({ lang, highlights, jobs, tools }) => {
           navs.education,
         ].filter((itm) => !!itm)}
       />
-      <LandContainer>
-        <Landing lang={lang} />
-        <SocialLinks lang={lang} />
-        <BtnContainer>
-          <DownBtn onClick={handleScroll}>
-            <ArrowDown />
-          </DownBtn>
-        </BtnContainer>
-      </LandContainer>
-      <Tools lang={lang} tools={tTools} handleNav={handleNav("tools")} />
-      <TagList lang={lang} tagIds={tagIds} tags={tags} handleTag={handleTag} />
-      <HighlightList
-        lang={lang}
-        highlights={tHighlights}
-        handleNav={handleNav("highlights")}
-      />
-      <ExperienceList
-        lang={lang}
-        data={experiences}
-        tagIds={tagIds}
-        handleTag={handleTag}
-        handleNav={handleNav("experience")}
-        title={Trans.experience[lang]}
-      />
-      <ExperienceList
-        lang={lang}
-        data={educations}
-        tagIds={tagIds}
-        handleTag={handleTag}
-        handleNav={handleNav("education")}
-        title={Trans.education[lang]}
-      />
-      <BackToTop />
+      <SafeView>
+        <LandContainer>
+          <Landing lang={lang} />
+          <SocialLinks lang={lang} />
+          <BtnContainer>
+            <DownBtn onClick={handleScroll}>
+              <ArrowDown />
+            </DownBtn>
+          </BtnContainer>
+        </LandContainer>
+        <Tools lang={lang} tools={tTools} handleNav={handleNav("tools")} />
+        <TagList
+          lang={lang}
+          tagIds={tagIds}
+          tags={tags}
+          handleTag={handleTag}
+        />
+        <HighlightList
+          lang={lang}
+          highlights={tHighlights}
+          handleNav={handleNav("highlights")}
+        />
+        <ExperienceList
+          lang={lang}
+          data={experiences}
+          tagIds={tagIds}
+          handleTag={handleTag}
+          handleNav={handleNav("experience")}
+          title={Trans.experience[lang]}
+        />
+        <ExperienceList
+          lang={lang}
+          data={educations}
+          tagIds={tagIds}
+          handleTag={handleTag}
+          handleNav={handleNav("education")}
+          title={Trans.education[lang]}
+        />
+        <BackToTop />
+      </SafeView>
     </Container>
   );
 };
