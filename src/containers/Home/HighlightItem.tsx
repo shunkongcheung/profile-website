@@ -3,7 +3,7 @@ import Link from "next/link";
 import styled from "styled-components";
 
 import { I18N, Lang } from "../../types";
-import { TagItem } from "../../components/TagItem";
+import { TagItem } from "../../components";
 import { useRouter } from "next/router";
 
 interface HighlightItemProps {
@@ -26,6 +26,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-bottom: 5rem;
 `;
 
 const MyImage = styled.div<{ src: string }>`
@@ -82,9 +83,9 @@ const HighlightItem: React.FC<HighlightItemProps> = ({
   const { pathname } = useRouter();
   return (
     <Container>
-      <Link href={`${pathname}/highlight/${id}`}>
+      <a href={`${pathname}/highlight/${id}`} target="_blank" rel="noreferrer">
         <MyImage src={thumbnail} />
-      </Link>
+      </a>
       <TagListContainer>
         {tags.map((tag) => (
           <ItemContainer key={`TagItem-${name.en}-${tag.en}`}>
@@ -93,7 +94,13 @@ const HighlightItem: React.FC<HighlightItemProps> = ({
         ))}
       </TagListContainer>
       <Name>
-        <Link href={`${pathname}/highlight/${id}`}>{name[lang]}</Link>
+        <a
+          href={`${pathname}/highlight/${id}`}
+          target="_blank"
+          rel="noreferrer"
+        >
+          {name[lang]}
+        </a>
       </Name>
       <Desc>
         {desc[lang].slice(0, 150)}
