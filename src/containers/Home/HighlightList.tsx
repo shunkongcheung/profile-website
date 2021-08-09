@@ -8,6 +8,7 @@ import HighlightItem from "./HighlightItem";
 interface HighlightListProps {
   highlights: Array<HighlightItem>;
   lang: Lang;
+  handleNav: (nav: { ref: HTMLElement; name: string }) => any;
 }
 
 interface HighlightItem {
@@ -23,8 +24,6 @@ interface Tag {
   en: string;
   zh: string;
 }
-
-const SPACE = "10px";
 
 const Container = styled.div`
   margin-top: 3rem;
@@ -54,10 +53,22 @@ const Trans: { [x: string]: I18N } = {
   },
 };
 
-const HighlightList: React.FC<HighlightListProps> = ({ highlights, lang }) => {
+const HighlightList: React.FC<HighlightListProps> = ({
+  handleNav,
+  highlights,
+  lang,
+}) => {
+  const name = Trans.heading[lang];
   return (
     <Container>
-      <Heading>{Trans.heading[lang]}</Heading>
+      <Heading
+        handleRef={(ref) => {
+          if (!ref) return;
+          handleNav({ ref, name });
+        }}
+      >
+        {name}
+      </Heading>
       <Content>
         {highlights.map((highlight) => (
           <ItemContainer>
