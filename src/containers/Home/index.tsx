@@ -2,7 +2,7 @@ import React, { memo } from "react";
 import moment from "moment";
 import styled, { keyframes } from "styled-components";
 
-import { AppBar } from "../../components";
+import { AppBar, BackToTop } from "../../components";
 import { Lang, I18N } from "../../types";
 
 import Landing from "./Landing";
@@ -245,6 +245,7 @@ const Home: React.FC<HomeProps> = ({ lang, highlights, jobs, tools }) => {
         handleNav={handleNav("education")}
         title={Trans.education[lang]}
       />
+      <BackToTop />
     </Container>
   );
 };
