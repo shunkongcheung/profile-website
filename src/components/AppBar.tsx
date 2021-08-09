@@ -158,7 +158,7 @@ interface NavItem {
 const AppBar: React.FC<AppBarProps> = ({ navs }) => {
   const [open, setOpen] = React.useState(false);
 
-  const { pathname, push } = useRouter();
+  const { pathname, push, query } = useRouter();
   const noLangPathname = pathname.split("/").slice(2).join("/");
   const lang = pathname.split("/")[1];
 
@@ -194,8 +194,10 @@ const AppBar: React.FC<AppBarProps> = ({ navs }) => {
             ))}
           </DesktopLinkContainer>
           <LinkContainer>
-            <Link href={`/en/${noLangPathname}`}>Eng</Link>
-            <Link href={`/zh/${noLangPathname}`}>中文</Link>
+            <Link href={{ pathname: `/en/${noLangPathname}`, query }}>Eng</Link>
+            <Link href={{ pathname: `/zh/${noLangPathname}`, query }}>
+              中文
+            </Link>
           </LinkContainer>
         </Content>
       </Container>
