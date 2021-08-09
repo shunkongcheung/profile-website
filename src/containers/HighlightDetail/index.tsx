@@ -163,7 +163,6 @@ const HighlightDetail: React.FC<HighlightDetailProps> = ({
                 link.endsWith("mp4") ? (
                   <embed
                     src={link}
-                    allowFullScreen="true"
                     width="600"
                     height="100%"
                     key={`MyEmbed-${link}`}
