@@ -10,11 +10,9 @@ const BackBtn = styled.button`
   background: transparent;
   cursor: pointer;
 
+  padding: 0;
   height: 30px;
-  width: 40px;
-  @media (min-width: 600px) {
-    width: 35px;
-  }
+  width: 30px;
 `;
 
 const BackArrow = styled.div`
@@ -33,11 +31,9 @@ const LinkContainer = styled.div`
 
 const HamburgerBtn = styled.button`
   height: 30px;
-  width: 50px;
-  @media (min-width: 600px) {
-    width: 45px;
-  }
+  width: 45px;
 
+  padding: 0;
   background: transparent;
   border: 0;
   flex-direction: column;
