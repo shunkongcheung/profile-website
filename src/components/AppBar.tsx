@@ -12,7 +12,7 @@ const BackBtn = styled.button`
 
   height: 30px;
   width: 40px;
-  @media (min-width: 450px) {
+  @media (min-width: 600px) {
     width: 35px;
   }
 `;
@@ -34,7 +34,7 @@ const LinkContainer = styled.div`
 const HamburgerBtn = styled.button`
   height: 30px;
   width: 50px;
-  @media (min-width: 450px) {
+  @media (min-width: 600px) {
     width: 45px;
   }
 
