@@ -7,7 +7,7 @@ import { Lang, I18N } from "../../types";
 
 interface ToolsProps {
   lang: Lang;
-  handleRef: (ref?: HTMLElement) => any;
+  handleNav: (ret: { ref: HTMLElement; name: string }) => any;
   tools: Array<Tool>;
 }
 
@@ -112,13 +112,14 @@ const Trans: { [x: string]: I18N } = {
   },
 };
 
-const Tools: React.FC<ToolsProps> = ({ tools, lang, handleRef }) => {
-  const { isVisible, handleRef: handleVRef } = useInViewport("-50%");
+const Tools: React.FC<ToolsProps> = ({ tools, lang, handleNav }) => {
+  const { isVisible, handleRef: handleRef } = useInViewport("-50%");
   return (
     <Container
       ref={(ref) => {
-        handleVRef(ref);
+        if (!ref) return;
         handleRef(ref);
+        handleNav({ ref, name: Trans.heading[lang] });
       }}
     >
       <MyHeading isVisible={isVisible}>{Trans.heading[lang]}</MyHeading>

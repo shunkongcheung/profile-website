@@ -10,6 +10,7 @@ import { Heading } from "../../components";
 interface ProfileProps {
   data: Array<Experience>;
   handleTag: (tag: string) => any;
+  handleNav: (nav: { ref: HTMLElement; name: string }) => any;
   lang: Lang;
   tagIds: Array<string>;
   title: string;
@@ -45,6 +46,7 @@ const Profile: React.FC<ProfileProps> = ({
   lang,
   data,
   handleTag,
+  handleNav,
   tagIds,
   title,
 }) => {
@@ -59,7 +61,13 @@ const Profile: React.FC<ProfileProps> = ({
 
   return (
     <Container>
-      <Heading>{title}</Heading>
+      <Heading
+        handleRef={(ref) => {
+          if (!!ref) handleNav({ ref, name: title });
+        }}
+      >
+        {title}
+      </Heading>
       {filteredData.map((item, idx) => (
         <ExperienceItem
           key={`ProfileExperienceItem-${item.title}-${item.companyName}-${idx}`}

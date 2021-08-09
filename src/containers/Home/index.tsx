@@ -56,6 +56,18 @@ interface Tool {
   icon: string;
 }
 
+interface NavItem {
+  name: string;
+  ref: HTMLElement;
+}
+
+interface NavState {
+  tools?: NavItem;
+  highlights?: NavItem;
+  experience?: NavItem;
+  education?: NavItem;
+}
+
 const bounce = keyframes`
 0% { transform: translateY(0px); }
 50% { transform: translateY(-20px); }
@@ -109,12 +121,24 @@ const Trans: { [x: string]: I18N } = {
 };
 
 const Home: React.FC<HomeProps> = ({ lang, highlights, jobs, tools }) => {
-  const toolRef = React.useRef<HTMLElement>();
+  const [navs, setNavs] = React.useState<NavState>({});
+
+  const handleNav = React.useCallback(
+    (name: string) => {
+      return (item: NavItem) => {
+        setNavs((o) => {
+          if (!!o[name]) return o;
+          return { ...o, [name]: item };
+        });
+      };
+    },
+    [setNavs]
+  );
 
   const handleScroll = React.useCallback(() => {
-    if (!toolRef.current) return;
-    toolRef.current.scrollIntoView({ behavior: "smooth" });
-  }, [toolRef]);
+    if (!navs.tools) return;
+    navs.tools.ref.scrollIntoView({ behavior: "smooth" });
+  }, [navs]);
 
   const allExps = React.useMemo(
     () =>
@@ -177,9 +201,18 @@ const Home: React.FC<HomeProps> = ({ lang, highlights, jobs, tools }) => {
     window.scrollTo(0, 0);
   }, []);
 
+  console.log(navs);
+
   return (
     <Container>
-      <AppBar />
+      <AppBar
+        navs={[
+          navs.tools,
+          navs.highlights,
+          navs.experience,
+          navs.education,
+        ].filter((itm) => !!itm)}
+      />
       <LandContainer>
         <Landing lang={lang} />
         <SocialLinks lang={lang} />
@@ -189,18 +222,19 @@ const Home: React.FC<HomeProps> = ({ lang, highlights, jobs, tools }) => {
           </DownBtn>
         </BtnContainer>
       </LandContainer>
-      <Tools
-        lang={lang}
-        tools={tTools}
-        handleRef={(ref) => (toolRef.current = ref)}
-      />
+      <Tools lang={lang} tools={tTools} handleNav={handleNav("tools")} />
       <TagList lang={lang} tagIds={tagIds} tags={tags} handleTag={handleTag} />
-      <HighlightList lang={lang} highlights={tHighlights} />
+      <HighlightList
+        lang={lang}
+        highlights={tHighlights}
+        handleNav={handleNav("highlights")}
+      />
       <ExperienceList
         lang={lang}
         data={experiences}
         tagIds={tagIds}
         handleTag={handleTag}
+        handleNav={handleNav("experience")}
         title={Trans.experience[lang]}
       />
       <ExperienceList
@@ -208,6 +242,7 @@ const Home: React.FC<HomeProps> = ({ lang, highlights, jobs, tools }) => {
         data={educations}
         tagIds={tagIds}
         handleTag={handleTag}
+        handleNav={handleNav("education")}
         title={Trans.education[lang]}
       />
     </Container>
