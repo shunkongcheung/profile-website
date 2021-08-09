@@ -5,6 +5,26 @@ import { useRouter } from "next/router";
 
 import { useWindowSize } from "../hooks";
 
+const BackBtn = styled.button`
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+
+  padding: 0;
+  height: 30px;
+  width: 30px;
+`;
+
+const BackArrow = styled.div`
+  width: 100%;
+  height: 100%;
+
+  background: url(/arrow-left.png);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+`;
+
 const LinkContainer = styled.div`
   margin-left: auto;
 `;
@@ -12,6 +32,8 @@ const LinkContainer = styled.div`
 const HamburgerBtn = styled.button`
   height: 30px;
   width: 45px;
+
+  padding: 0;
   background: transparent;
   border: 0;
   flex-direction: column;
@@ -136,8 +158,9 @@ interface NavItem {
 const AppBar: React.FC<AppBarProps> = ({ navs }) => {
   const [open, setOpen] = React.useState(false);
 
-  const { pathname } = useRouter();
+  const { pathname, push } = useRouter();
   const noLangPathname = pathname.split("/").slice(2).join("/");
+  const lang = pathname.split("/")[1];
 
   const { width } = useWindowSize();
 
@@ -149,11 +172,17 @@ const AppBar: React.FC<AppBarProps> = ({ navs }) => {
     <>
       <Container>
         <Content>
-          <HamburgerBtn onClick={() => setOpen(true)}>
-            <div></div>
-            <div></div>
-            <div></div>
-          </HamburgerBtn>
+          {!!navs.length ? (
+            <HamburgerBtn onClick={() => setOpen(true)}>
+              <div></div>
+              <div></div>
+              <div></div>
+            </HamburgerBtn>
+          ) : (
+            <BackBtn onClick={() => push(`/${lang}`)}>
+              <BackArrow />
+            </BackBtn>
+          )}
           <DesktopLinkContainer>
             {navs.map(({ name, ref }) => (
               <DesktopLink
