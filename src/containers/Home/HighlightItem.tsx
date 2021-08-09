@@ -88,9 +88,11 @@ const HighlightItem: React.FC<HighlightItemProps> = ({
   const { pathname } = useRouter();
   return (
     <Container>
-      <a href={`${pathname}/highlight/${id}`} target="_blank" rel="noreferrer">
-        <MyImage src={thumbnail} />
-      </a>
+      <Link href={`${pathname}/highlight/${id}`} passHref>
+        <a>
+          <MyImage src={thumbnail} />
+        </a>
+      </Link>
       <TagListContainer>
         {tags.map((tag) => (
           <ItemContainer key={`TagItem-${name.en}-${tag.en}`}>
@@ -99,13 +101,9 @@ const HighlightItem: React.FC<HighlightItemProps> = ({
         ))}
       </TagListContainer>
       <Name>
-        <a
-          href={`${pathname}/highlight/${id}`}
-          target="_blank"
-          rel="noreferrer"
-        >
-          {name[lang]}
-        </a>
+        <Link href={`${pathname}/highlight/${id}`} passHref>
+          <a>{name[lang]}</a>
+        </Link>
       </Name>
       <Desc>
         {desc[lang].slice(0, 150)}
