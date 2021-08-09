@@ -34,8 +34,13 @@ const MyImage = styled.div<{ src: string }>`
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  width: 400px;
-  height: 600px;
+
+  width: 300px;
+  height: 400px;
+  @media (min-width) {
+    width: 400px;
+    height: 600px;
+  }
 
   border-radius: 10px;
   filter: saturate(50%);

@@ -44,6 +44,11 @@ const Company = styled.h4`
   font-weight: 400;
   margin: 0.5rem 0;
   color: ${(props) => props.theme.colors.primary[50]};
+
+  text-align: center;
+  @media (min-width: 600px) {
+    text-align: left;
+  }
 `;
 
 const Container = styled.div<{ borderWidth: number }>`
@@ -97,6 +102,11 @@ const Duration = styled.h5`
   margin-top: 0.4rem;
   font-weight: 500;
   color: ${(props) => props.theme.colors.primary[100]};
+
+  text-align: center;
+  @media (min-width: 600px) {
+    text-align: left;
+  }
 `;
 
 const Link = styled.a`
@@ -123,6 +133,10 @@ const TagsContainer = styled.div`
 const Title = styled.h3`
   margin: 0;
   color ${(props) => props.theme.colors.primary[500]};
+  text-align: center;
+  @media(min-width: 600px){
+  text-align: left;
+  }
 `;
 
 const Trans: { [x: string]: I18N } = {

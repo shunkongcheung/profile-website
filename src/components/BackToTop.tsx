@@ -23,6 +23,10 @@ const Button = styled.button`
   width: 50px;
   height: 50px;
 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
   background: 
   color: white;
 
@@ -35,8 +39,13 @@ const Button = styled.button`
 const ArrowUp = styled.div`
   background: url(/arrow-up.png);
   background-size: cover;
-  width: 40px;
-  height: 40px;
+
+  width: 30px;
+  height: 30px;
+  @media (min-width: 400px) {
+    width: 40px;
+    height: 40px;
+  }
 `;
 
 const BackToTop: React.FC = () => {
