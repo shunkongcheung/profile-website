@@ -6,11 +6,15 @@ import { useRouter } from "next/router";
 import { useWindowSize } from "../hooks";
 
 const BackBtn = styled.button`
-  height: 30px;
-  width: 35px;
   border: 0;
   background: transparent;
   cursor: pointer;
+
+  height: 30px;
+  width: 40px;
+  @media (min-width: 450px) {
+    width: 35px;
+  }
 `;
 
 const BackArrow = styled.div`
@@ -29,7 +33,11 @@ const LinkContainer = styled.div`
 
 const HamburgerBtn = styled.button`
   height: 30px;
-  width: 45px;
+  width: 50px;
+  @media (min-width: 450px) {
+    width: 45px;
+  }
+
   background: transparent;
   border: 0;
   flex-direction: column;
