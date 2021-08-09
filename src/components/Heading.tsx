@@ -2,7 +2,7 @@ import React, { memo } from "react";
 import styled from "styled-components";
 
 const Container = styled.h2`
-  padding-top: 3rem;
+  padding-top: 5rem;
   font-size: 2rem;
   color: ${(props) => props.theme.colors.primary[50]};
 `;
