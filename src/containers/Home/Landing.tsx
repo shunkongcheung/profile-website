@@ -66,7 +66,7 @@ const Name = styled.h1`
 const Location = styled.h2`
   margin: 0;
   font-weight: 300;
-  color: white;
+  color: ${(props) => props.theme.colors.primary[50]};
 `;
 
 const TRANS: { [x: string]: I18N } = {

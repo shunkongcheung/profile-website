@@ -1,9 +1,8 @@
 import React, { memo } from "react";
-import Link from "next/link";
 import styled from "styled-components";
 import { useRouter } from "next/router";
 
-import { useWindowSize } from "../hooks";
+import { useDarkModeContext, useWindowSize } from "../hooks";
 
 const BackBtn = styled.button`
   border: 0;
@@ -15,21 +14,47 @@ const BackBtn = styled.button`
   width: 30px;
 `;
 
-const BackArrow = styled.div`
+const BackArrow = styled.div<{ mode: string }>`
   width: 100%;
   height: 100%;
 
-  background: url(/arrow-left.png);
+  background: url(/arrow-left-${(props) => props.mode}.png);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 `;
 
 const LinkContainer = styled.div`
-  margin-left: auto;
+  margin-left: 10px;
 `;
 
-const HamburgerBtn = styled.button`
+const ModeBtn = styled.button`
+  width: 30px;
+  width: 30px;
+  background: transparent;
+  border: 0;
+  margin-left: auto;
+  position: relative;
+  cursor: pointer;
+`;
+
+const ModeImg = styled.div<{ isVisible: boolean; url: string }>`
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+
+  background: url(${(props) => props.url});
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  transition: opacity 0.5s linear;
+  opacity: ${(props) => (props.isVisible ? 1 : 0)};
+`;
+
+const HamburgerBtn = styled.button<{ color: string }>`
   height: 30px;
   width: 45px;
 
@@ -42,13 +67,13 @@ const HamburgerBtn = styled.button`
   div {
     width: 100%;
     height: 25%;
-    background: ${(props) => props.theme.colors.primary[500]};
+    background: ${(props) => props.color};
     border-radius: 5px;
     transition: background 0.2s ease-in;
   }
 
   &:hover div {
-    background: ${(props) => props.theme.colors.primary[700]};
+    text-decoration: underline;
   }
 
   display: flex;
@@ -57,10 +82,10 @@ const HamburgerBtn = styled.button`
   }
 `;
 
-const DesktopLink = styled.button`
+const DesktopLink = styled.button<{ color: string }>`
   border: 0;
   background: transparent;
-  color: ${(props) => props.theme.colors.primary[500]};
+  color: ${(props) => props.color};
   margin-right: 1rem;
 
   font-size: 1rem;
@@ -69,15 +94,14 @@ const DesktopLink = styled.button`
   }
 
   &:hover {
-    color: ${(props) => props.theme.colors.primary[400]};
     text-decoration: underline;
   }
 `;
 
-const Cross = styled.button`
+const Cross = styled.button<{ mode: string }>`
   border: 0;
   margin-left: auto;
-  background: url(/cross.png);
+  background: url(/cross-${(props) => props.mode}.png);
   background-size: cover;
   background-repeat: no-repeat;
   width: 2rem;
@@ -94,6 +118,7 @@ const DesktopLinkContainer = styled.div`
 `;
 
 const MobileContainer = styled.div<{
+  background: string;
   open: boolean;
 }>`
   position: fixed;
@@ -102,7 +127,7 @@ const MobileContainer = styled.div<{
   width: 100vw;
   height: 100vh;
   z-index: 2;
-  background: #2d3e50;
+  background: ${(props) => props.background};
 
   display: flex;
   flex-direction: column;
@@ -113,24 +138,24 @@ const MobileContainer = styled.div<{
   transform: translateY(${(props) => (props.open ? 0 : -100)}%);
 `;
 
-const MobileNavItem = styled.button`
+const MobileNavItem = styled.button<{ color: string }>`
   background: transparent;
   border: 0;
   margin: 2rem auto;
-  color: ${(props) => props.theme.colors.primary[500]};
+  color: ${(props) => props.color};
   font-weight: 500;
   font-size: 1.5rem;
   cursor: pointer;
 `;
 
-const Container = styled.div`
+const Container = styled.div<{ background: string }>`
   display: flex;
   padding-top: 1rem;
   padding-bottom: 2rem;
   top: 0;
   z-index: 1;
   position: sticky;
-  background: #2d3e50;
+  background: ${(props) => props.background};
 
   padding: 1rem 1.5rem;
   @media (min-width: 600px) {
@@ -157,6 +182,18 @@ interface NavItem {
 
 const AppBar: React.FC<AppBarProps> = ({ navs }) => {
   const [open, setOpen] = React.useState(false);
+  const { mode, setMode } = useDarkModeContext();
+
+  const theme = {
+    light: {
+      background: "#3b82f6",
+      color: "#f4f4f5",
+    },
+    dark: {
+      background: "#2d3e50",
+      color: "#f43f5e",
+    },
+  };
 
   const { pathname, push, query } = useRouter();
   const noLangPathname = pathname.split("/").slice(2).join("/");
@@ -170,22 +207,26 @@ const AppBar: React.FC<AppBarProps> = ({ navs }) => {
 
   return (
     <>
-      <Container>
+      <Container background={theme[mode].background}>
         <Content>
           {!!navs.length ? (
-            <HamburgerBtn onClick={() => setOpen(true)}>
+            <HamburgerBtn
+              onClick={() => setOpen(true)}
+              color={theme[mode].color}
+            >
               <div></div>
               <div></div>
               <div></div>
             </HamburgerBtn>
           ) : (
             <BackBtn onClick={() => push(`/${lang}`)}>
-              <BackArrow />
+              <BackArrow mode={mode} />
             </BackBtn>
           )}
           <DesktopLinkContainer>
             {navs.map(({ name, ref }) => (
               <DesktopLink
+                color={theme[mode].color}
                 key={`DesktopLink-${name}`}
                 onClick={() => ref.scrollIntoView({ behavior: "smooth" })}
               >
@@ -193,18 +234,33 @@ const AppBar: React.FC<AppBarProps> = ({ navs }) => {
               </DesktopLink>
             ))}
           </DesktopLinkContainer>
+          <ModeBtn
+            onClick={() => setMode((o) => (o === "dark" ? "light" : "dark"))}
+          >
+            <ModeImg url="/dark-mode.png" isVisible={mode === "dark"} />
+            <ModeImg url="/light-mode.png" isVisible={mode === "light"} />
+          </ModeBtn>
           <LinkContainer>
-            <Link href={{ pathname: `/en/${noLangPathname}`, query }}>Eng</Link>
-            <Link href={{ pathname: `/zh/${noLangPathname}`, query }}>
+            <DesktopLink
+              onClick={() => push({ pathname: `/en/${noLangPathname}`, query })}
+              color={theme[mode].color}
+            >
+              Eng
+            </DesktopLink>
+            <DesktopLink
+              onClick={() => push({ pathname: `/zh/${noLangPathname}`, query })}
+              color={theme[mode].color}
+            >
               中文
-            </Link>
+            </DesktopLink>
           </LinkContainer>
         </Content>
       </Container>
-      <MobileContainer open={open}>
-        <Cross onClick={() => setOpen(false)} />
+      <MobileContainer open={open} background={theme[mode].background}>
+        <Cross onClick={() => setOpen(false)} mode={mode} />
         {navs.map(({ name, ref }) => (
           <MobileNavItem
+            color={theme[mode].color}
             key={`DesktopLink-${name}`}
             onClick={() => {
               setOpen(false);
