@@ -1,5 +1,4 @@
 import React, { memo } from "react";
-import Link from "next/link";
 import styled from "styled-components";
 import { useRouter } from "next/router";
 
@@ -15,11 +14,11 @@ const BackBtn = styled.button`
   width: 30px;
 `;
 
-const BackArrow = styled.div`
+const BackArrow = styled.div<{ mode: string }>`
   width: 100%;
   height: 100%;
 
-  background: url(/arrow-left.png);
+  background: url(/arrow-left-${(props) => props.mode}.png);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -164,13 +163,6 @@ const Container = styled.div<{ background: string }>`
   }
 `;
 
-const LangLink = styled(Link)<{ color: string }>`
-  color: ${(props) => props.color};
-  &:hover {
-    text-decoration: underline;
-  }
-`;
-
 const Content = styled.div`
   margin-left: auto;
   margin-right: auto;
@@ -228,7 +220,7 @@ const AppBar: React.FC<AppBarProps> = ({ navs }) => {
             </HamburgerBtn>
           ) : (
             <BackBtn onClick={() => push(`/${lang}`)}>
-              <BackArrow />
+              <BackArrow mode={mode} />
             </BackBtn>
           )}
           <DesktopLinkContainer>
@@ -249,18 +241,18 @@ const AppBar: React.FC<AppBarProps> = ({ navs }) => {
             <ModeImg url="/light-mode.png" isVisible={mode === "light"} />
           </ModeBtn>
           <LinkContainer>
-            <LangLink
-              href={{ pathname: `/en/${noLangPathname}`, query }}
+            <DesktopLink
+              onClick={() => push({ pathname: `/en/${noLangPathname}`, query })}
               color={theme[mode].color}
             >
               Eng
-            </LangLink>
-            <LangLink
-              href={{ pathname: `/zh/${noLangPathname}`, query }}
+            </DesktopLink>
+            <DesktopLink
+              onClick={() => push({ pathname: `/zh/${noLangPathname}`, query })}
               color={theme[mode].color}
             >
               中文
-            </LangLink>
+            </DesktopLink>
           </LinkContainer>
         </Content>
       </Container>
