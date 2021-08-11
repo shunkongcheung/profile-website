@@ -64,7 +64,7 @@ const CarouselBtn = styled.button<{ isFocus: boolean }>`
   margin-left: 5px;
   margin-right: 5px;
 
-  border: 2px solid ${(props) => props.theme.colors.primary[900]};
+  border: 2px solid ${(props) => props.theme.colors.primary[700]};
   background: ${(props) =>
     props.isFocus ? props.theme.colors.primary[500] : "transparent"};
 `;
