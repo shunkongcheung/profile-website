@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { I18N, Lang } from "../../types";
 import { TagItem } from "../../components";
 import { useRouter } from "next/router";
+import { useDarkModeContext } from "../../hooks";
 
 interface HighlightItemProps {
   id: number;
@@ -29,7 +30,7 @@ const Container = styled.div`
   margin-bottom: 5rem;
 `;
 
-const MyImage = styled.div<{ src: string }>`
+const MyImage = styled.div<{ src: string; isDark: boolean }>`
   background: url(${(props) => props.src});
   background-size: cover;
   background-repeat: no-repeat;
@@ -43,11 +44,12 @@ const MyImage = styled.div<{ src: string }>`
   }
 
   border-radius: 10px;
-  filter: saturate(50%);
+
+  filter: saturate(${(props) => (props.isDark ? 50 : 100)}%);
   transition: filter 0.2s ease-in, transform 0.2s ease-in;
 
   &:hover {
-    filter: saturate(105%);
+    filter: saturate(${(props) => (props.isDark ? 100 : 150)}%);
     transform: scale(1.05);
   }
 `;
@@ -86,11 +88,12 @@ const HighlightItem: React.FC<HighlightItemProps> = ({
   thumbnail,
 }) => {
   const { pathname } = useRouter();
+  const { mode } = useDarkModeContext();
   return (
     <Container>
       <Link href={`${pathname}/highlight/${id}`} passHref>
         <a>
-          <MyImage src={thumbnail} />
+          <MyImage src={thumbnail} isDark={mode === "dark"} />
         </a>
       </Link>
       <TagListContainer>
