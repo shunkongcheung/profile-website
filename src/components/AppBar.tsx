@@ -245,13 +245,13 @@ const AppBar: React.FC<AppBarProps> = ({ navs }) => {
               onClick={() => push({ pathname: `/en/${noLangPathname}`, query })}
               color={theme[mode].color}
             >
-              Eng
+              ENG
             </DesktopLink>
             <DesktopLink
               onClick={() => push({ pathname: `/zh/${noLangPathname}`, query })}
               color={theme[mode].color}
             >
-              中文
+              繁
             </DesktopLink>
           </LinkContainer>
         </Content>
