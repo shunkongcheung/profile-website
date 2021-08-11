@@ -92,7 +92,7 @@ const HighlightItem: React.FC<HighlightItemProps> = ({
   return (
     <Container>
       <Link href={`${pathname}/highlight/${id}`} passHref>
-        <a>
+        <a  style={{ margin: 0 }}>
           <MyImage src={thumbnail} isDark={mode === "dark"} />
         </a>
       </Link>
