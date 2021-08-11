@@ -98,10 +98,10 @@ const DesktopLink = styled.button<{ color: string }>`
   }
 `;
 
-const Cross = styled.button`
+const Cross = styled.button<{ mode: string }>`
   border: 0;
   margin-left: auto;
-  background: url(/cross.png);
+  background: url(/cross-${(props) => props.mode}.png);
   background-size: cover;
   background-repeat: no-repeat;
   width: 2rem;
@@ -257,7 +257,7 @@ const AppBar: React.FC<AppBarProps> = ({ navs }) => {
         </Content>
       </Container>
       <MobileContainer open={open} background={theme[mode].background}>
-        <Cross onClick={() => setOpen(false)} />
+        <Cross onClick={() => setOpen(false)} mode={mode} />
         {navs.map(({ name, ref }) => (
           <MobileNavItem
             color={theme[mode].color}
