@@ -101,12 +101,15 @@ const Container = styled.div`
 `;
 
 const LandContainer = styled.div`
-  height: calc(100vh - 80px);
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
 
   border: 1px sold red;
+
+  @media (min-width: 700px) {
+    height: calc(100vh - 80px);
+  }
 `;
 
 const Trans: { [x: string]: I18N } = {
