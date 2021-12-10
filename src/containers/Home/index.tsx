@@ -147,10 +147,7 @@ const Home: React.FC<HomeProps> = ({ lang, highlights, jobs, tools }) => {
     () =>
       jobs.map((itm) => ({
         id: itm.id,
-        images: itm.images.map(
-          (itm) =>
-            `https://home-backend.shunkongcheung.com/static/resume-images/${itm}`
-        ),
+        images: itm.images,
         companyName: itm.companyName,
         companyUrl: itm.companyUrl,
         title: itm.title,
