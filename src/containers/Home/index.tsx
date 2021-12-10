@@ -34,12 +34,12 @@ interface Job {
   id: number;
   images: Array<string>;
   companyName: string;
-  companyUrl: string;
+  companyUrl?: string;
   title: string;
-  dateFrom: string;
-  dateTo: string;
-  isEducation: boolean;
-  isPartTime: boolean;
+  dateFrom: Date;
+  dateTo?: Date;
+  isEducation?: boolean;
+  isPartTime?: boolean;
   descriptions: Array<string>;
   tags: Array<Tag>;
 }
@@ -147,10 +147,7 @@ const Home: React.FC<HomeProps> = ({ lang, highlights, jobs, tools }) => {
     () =>
       jobs.map((itm) => ({
         id: itm.id,
-        images: itm.images.map(
-          (itm) =>
-            `https://home-backend.shunkongcheung.com/static/resume-images/${itm}`
-        ),
+        images: itm.images,
         companyName: itm.companyName,
         companyUrl: itm.companyUrl,
         title: itm.title,
@@ -181,7 +178,7 @@ const Home: React.FC<HomeProps> = ({ lang, highlights, jobs, tools }) => {
         id: highlight.id,
         name: { en: highlight.nameEn, zh: highlight.nameZh },
         desc: { en: highlight.descEn, zh: highlight.descZh },
-        thumbnail: `https://home-backend.shunkongcheung.com/static/highlights/${highlight.thumbnail}`,
+        thumbnail: highlight.thumbnail,
         tags: tags.filter(
           (aTag) => !!highlight.tags.find((hTag) => hTag.name === aTag.name)
         ),
@@ -193,7 +190,6 @@ const Home: React.FC<HomeProps> = ({ lang, highlights, jobs, tools }) => {
     () =>
       tools.map((itm) => ({
         ...itm,
-        icon: `https://home-backend.shunkongcheung.com/static/tools/${itm.icon}`,
       })),
     [tools]
   );

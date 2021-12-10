@@ -155,10 +155,6 @@ const HighlightDetail: React.FC<HighlightDetailProps> = ({
         <AssetContainer>
           <Carousel control={{ idx: carouselIdx }}>
             {assets
-              .map(
-                (link) =>
-                  `https://home-backend.shunkongcheung.com/static/highlights/${link}`
-              )
               .map((link) =>
                 link.endsWith("mp4") ? (
                   <embed
