@@ -208,5 +208,6 @@ const jobs = [
 export default jobs.map((itm, id) => ({
   id,
   ...itm,
+  images: itm.images.map((itm) => `/resume-images/${itm}`),
   tags: itm.tags.map((name) => tags.find((itm) => itm.name === name)),
 }));
