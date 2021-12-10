@@ -1,25 +1,14 @@
-import { GetStaticPropsContext } from "next";
+import { GetServerSidePropsContext } from "next";
 
 import HighlightDetail from "../../../containers/HighlightDetail";
-import { fetchHighlight, fetchHighlights } from "../../../utils";
+import {highlights} from "../../../data";
 
-export default function HighlightDetailPage({ highlight }) {
-  return <HighlightDetail {...highlight} lang="en" />;
+export default function HighlightDetailPage({ id }) {
+  const highlight = highlights.find(itm => itm.id === Number(id))
+  return <HighlightDetail {...highlight!!} lang="en" />;
 }
 
-export const getStaticPaths = async () => {
-  const highlights = await fetchHighlights();
-  return {
-    paths: highlights.map((itm) => ({ params: { id: `${itm.id}` } })),
-    fallback: false,
-  };
-};
-
-export const getStaticProps = async ({ params }: GetStaticPropsContext) => {
+export const getServerSideProps = async ({ params }: GetServerSidePropsContext) => {
   const { id } = params;
-  return {
-    props: {
-      highlight: await fetchHighlight(Number(id)),
-    },
-  };
+  return { props: { id } };
 };
