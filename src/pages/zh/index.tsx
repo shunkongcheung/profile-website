@@ -1,16 +1,6 @@
 import Home from "../../containers/Home";
-import { fetchHighlights, fetchJobs, fetchTools } from "../../utils";
+import { highlights, jobs, tools } from "../../data";
 
-export default function EnHomePage({ highlights, jobs, tools }) {
+export default function ZhHomePage() {
   return <Home lang="zh" highlights={highlights} jobs={jobs} tools={tools} />;
 }
-
-export const getStaticProps = async () => {
-  return {
-    props: {
-      highlights: await fetchHighlights(),
-      jobs: await fetchJobs(),
-      tools: await fetchTools(),
-    },
-  };
-};
