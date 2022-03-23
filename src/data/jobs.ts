@@ -37,7 +37,7 @@ const jobs = [
       "experience-microsoft.png",
       "experience-microsoft-viva-insights.png",
     ],
-    dateFrom: new Date("2021-02-14"),
+    dateFrom: new Date("2022-02-14"),
     tags: [
       "microsoft",
       "vancouver",
