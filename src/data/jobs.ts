@@ -57,7 +57,7 @@ const jobs = [
       "experience-aws.png",
     ],
     dateFrom: new Date("2021-10-01"),
-    dateTo: new Date("2021-02-01"),
+    dateTo: new Date("2022-02-01"),
     tags: [
       "amazon",
       "vancouver",
