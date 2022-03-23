@@ -2,6 +2,7 @@ const tags = [
   // location
   { name: "hongKong", en: "Hong Kong", zh: "香港" },
   { name: "toronto", en: "Toronto", zh: "多倫多" },
+  { name: "vancouver", en: "Vancouver", zh: "溫哥華" },
   // random
   { name: "compeng", en: "computer eng.", zh: "電腦工程" },
   { name: "dbs", en: "Diocesan Boys' School", zh: "拔萃男書院" },
@@ -14,6 +15,7 @@ const tags = [
   { name: "cSharp", en: "C#", zh: "C#" },
   { name: "django", en: "django", zh: "django" },
   { name: "flask", en: "flask", zh: "flask" },
+  { name: "fluentui", en: "@fluentui/react", zh: "@fluentui/react" },
   { name: "javascript", en: "javascript", zh: "javascript" },
   { name: "hubl", en: "HubL", zh: "HubL" },
   { name: "mux", en: "Mux", zh: "Mux" },
@@ -25,12 +27,15 @@ const tags = [
   { name: "postgres", en: "PostgreSQL", zh: "PostgreSQL" },
   { name: "react", en: "react", zh: "react" },
   { name: "reactNative", en: "react-native", zh: "react-native" },
+  { name: "redux-toolkit", en: "redux-toolkit", zh: "redux-toolkit" },
   { name: "firebase", en: "firebase", zh: "firebase" },
   // company
+  { name: "amazon", en: "Amazon (AWS)", zh: "亞馬遜(AWS)" },
   { name: "clp", en: "CLP", zh: "中電" },
   { name: "hkbn", en: "HKBN", zh: "香港寬頻" },
   { name: "hsbc", en: "HSBC", zh: "匯豐" },
   { name: "maxim", en: "Maxim MX", zh: "美心" },
+  { name: "microsoft", en: "Microsoft", zh: "微軟" },
   { name: "sickKids", en: "Sickkids", zh: "Sickkids" },
   { name: "radica", en: "Radica", zh: "雷克" },
   { name: "qmo", en: "Quantum Mobs", zh: "Quantum Mobs" },

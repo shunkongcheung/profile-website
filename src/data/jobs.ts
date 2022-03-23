@@ -30,6 +30,43 @@ const jobs = [
   },
   {
     descriptions: [
+      "Developed frontend application for workplace analytics (i.e. Viva Insight - Organization)",
+    ],
+    companyUrl: "https://www.microsoft.com/en-ca/microsoft-viva/insights",
+    images: [
+      "experience-microsoft.png",
+      "experience-microsoft-viva-insights.png",
+    ],
+    dateFrom: new Date("2021-02-14"),
+    tags: [
+      "microsoft",
+      "vancouver",
+      "react",
+      "fluentui",
+      "redux-toolkit",
+    ],
+    title: "Software Engineer II",
+    companyName: "Microsoft",
+  },
+  {
+    descriptions: [
+      "Improved Mitosis key storage system",
+    ],
+    companyUrl: "https://amazon.ca/",
+    images: [
+      "experience-aws.png",
+    ],
+    dateFrom: new Date("2021-10-01"),
+    dateTo: new Date("2021-02-01"),
+    tags: [
+      "amazon",
+      "vancouver",
+    ],
+    title: "Software Engineer II",
+    companyName: "Amazon Inc.",
+  },
+  {
+    descriptions: [
       "Established full-stack mobile application by react native; Python, Flask and PostgreSQL",
       "Implemented google and facebook SSO service with firebase",
       "Implemented AODA accessibility requirement for client's website",
@@ -44,6 +81,7 @@ const jobs = [
       "experience-qmo-hubspot.jpg",
     ],
     dateFrom: new Date("2020-01-01"),
+    dateTo: new Date("2021-10-01"),
     tags: [
       "qmo",
       "toronto",
