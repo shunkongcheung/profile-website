@@ -200,8 +200,6 @@ const Home: React.FC<HomeProps> = ({ lang, highlights, jobs, tools }) => {
     window.scrollTo(0, 0);
   }, []);
 
-  console.log(navs);
-
   return (
     <Container>
       <AppBar
