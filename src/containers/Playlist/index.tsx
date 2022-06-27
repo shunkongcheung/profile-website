@@ -1,5 +1,6 @@
 import React, { memo } from "react";
 import styled  from "styled-components";
+import Button from "../../components/Button";
 
 interface PlaylistProps {
   youtubers: Array<Youtuber>
@@ -31,9 +32,16 @@ const Youtuber = styled.div`
 `
 
 const Playlist: React.FC<PlaylistProps> = ({ youtubers }) => {
+  const refresh = React.useCallback(async () => {
+    await fetch("/api/refresh-playlist");
+    window.location.reload();
+  }, [])
 
   return (
     <Container>
+      <Button onClick={refresh}>
+        refresh
+      </Button>
       hello world
       {youtubers.map(youtuber => <Youtuber key={youtuber.channelId}>{youtuber.title}</Youtuber>)}
     </Container>
