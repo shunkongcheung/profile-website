@@ -25,6 +25,7 @@ interface RawYoutuber{
 }
 
 interface Video {
+  downloadUrl: string;
   videoId: string;
   description: string;
   title: string;
@@ -117,7 +118,6 @@ const fetchFromYoutuber = async<T extends object>(params: object) => {
     url: 'https://youtube.googleapis.com/youtube/v3/search',
     params: {
       part:'snippet',
-      maxResults:5,
       ...params,
       key:process.env.GOOGLE_API_KEY,
     },
@@ -126,20 +126,35 @@ const fetchFromYoutuber = async<T extends object>(params: object) => {
   return response.data.items as Array<T>;
 }
 
+const getVideoMp3Url = async (videoId: string): Promise<string> => {
+	const options = {
+		method: 'GET',
+		url: 'https://youtube-mp36.p.rapidapi.com/dl',
+		params: { id: videoId },
+		headers: {
+			'X-RapidAPI-Key': process.env.RAPID_API_KEY,
+			'X-RapidAPI-Host': 'youtube-mp36.p.rapidapi.com'
+		}
+	};
+	const response = await axios.request(options)
+	return response.data.link;
+}
 
 const getVideos = async (channelId: string, publishedAfter: Date):Promise<Array<Video>> => {
   const items = await fetchFromYoutuber<RawVideo>({
     channelId,
+    maxResults:3,
     order:"date",
-    type: "video",
     publishedAfter,
+    type: "video",
   })
-  return items.map(item => ({
+  return Promise.all(items.map(async item => ({
+    downloadUrl: await getVideoMp3Url(item.id.videoId),
     videoId: item.id.videoId,
     description: item.snippet.description,
     title: item.snippet.title,
     publishedAt: new Date(item.snippet.publishedAt),
-  }));
+  })));
 }
 
 const getYoutubers = async () => {
@@ -152,7 +167,6 @@ const getYoutubers = async () => {
       const [items, videos] = await Promise.all([
         fetchFromYoutuber<RawYoutuber>({
           channelId,
-          maxResults:1,
           type: "channel",
         }),
        getVideos(channelId, publishedAfter)
@@ -179,6 +193,5 @@ const getYoutubers = async () => {
     }
   }))
 };
-
 
 export default getYoutubers;
