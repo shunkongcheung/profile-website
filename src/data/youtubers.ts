@@ -1,4 +1,5 @@
 import axios from "axios";
+import moment from "moment";
 
 interface RawVideo {
   id: {
@@ -158,9 +159,8 @@ const getVideos = async (channelId: string, publishedAfter: Date):Promise<Array<
 }
 
 const getYoutubers = async () => {
-  const today = new Date();
-  const publishedAfter = new Date(today.getTime());
-  publishedAfter.setDate(today.getDate() - 3);
+  const today = moment();
+  const publishedAfter = today.add(-3, "day");
 
   return Promise.all(youtubers.map(async ({ channelId, title }): Promise<Youtuber> => {
     try{
@@ -169,7 +169,7 @@ const getYoutubers = async () => {
           channelId,
           type: "channel",
         }),
-       getVideos(channelId, publishedAfter)
+       getVideos(channelId, publishedAfter.toDate())
       ]);
 
       const { snippet } = items[0];
