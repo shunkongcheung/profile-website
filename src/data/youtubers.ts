@@ -1,12 +1,45 @@
 import axios from "axios";
 
+interface RawVideo {
+  id: {
+    videoId: string;
+  },
+  snippet: {
+    description: string;
+    title: string;
+    publishedAt: string;
+  }
+}
+
+interface RawYoutuber{
+  snippet: {
+    description: string;
+    title: string;
+    publishedAt: string;
+    thumbnails:{
+      default: {
+        url: string;
+      }
+    }
+  }
+}
+
+interface Video {
+  videoId: string;
+  description: string;
+  title: string;
+  publishedAt: Date;
+}
+
 interface Youtuber {
   channelId: string;
   description: string;
   title: string;
   publishedAt: Date;
   thumbnail: string;
+  videos: Array<Video>;
 }
+
 const youtubers = [
   {
     channelId: "UCmi1257Mo7v4ors9-ekOq1w",
@@ -78,44 +111,74 @@ const youtubers = [
   },
 ]
 
-const getYoutubers = async () => Promise.all(youtubers.map(async ({ channelId, title }): Promise<Youtuber> => {
+const fetchFromYoutuber = async<T extends object>(params: object) => {
   const options = {
     method: 'GET',
     url: 'https://youtube.googleapis.com/youtube/v3/search',
     params: {
       part:'snippet',
-      channelId,
-      maxResults:1,
-      type: "channel",
-      key: process.env.GOOGLE_API_KEY,
+      maxResults:5,
+      ...params,
+      key:process.env.GOOGLE_API_KEY,
     },
   };
+  const response = await axios.request(options)
+  return response.data.items as Array<T>;
+}
 
-  try{
-    const response = await axios.request(options)
-    const { items } = response.data;
 
-    if(!Array.isArray(items) || !items.length) {
-      throw Error();
-    }
+const getVideos = async (channelId: string, publishedAfter: Date):Promise<Array<Video>> => {
+  const items = await fetchFromYoutuber<RawVideo>({
+    channelId,
+    order:"date",
+    type: "video",
+    publishedAfter,
+  })
+  return items.map(item => ({
+    videoId: item.id.videoId,
+    description: item.snippet.description,
+    title: item.snippet.title,
+    publishedAt: new Date(item.snippet.publishedAt),
+  }));
+}
 
-    const {snippet} = items[0]
-    return {
-      channelId,
-      description: snippet.description,
-      title: snippet.title,
-      thumbnail: snippet.thumbnails.default.url,
-      publishedAt: new Date(snippet.publishedAt),
+const getYoutubers = async () => {
+  const today = new Date();
+  const publishedAfter = new Date(today.getTime());
+  publishedAfter.setDate(today.getDate() - 3);
+
+  return Promise.all(youtubers.map(async ({ channelId, title }): Promise<Youtuber> => {
+    try{
+      const [items, videos] = await Promise.all([
+        fetchFromYoutuber<RawYoutuber>({
+          channelId,
+          maxResults:1,
+          type: "channel",
+        }),
+       getVideos(channelId, publishedAfter)
+      ]);
+
+      const { snippet } = items[0];
+      return {
+        channelId,
+        description: snippet.description,
+        publishedAt: new Date(snippet.publishedAt),
+        title: snippet.title,
+        thumbnail: snippet.thumbnails.default.url,
+        videos,
+      }
+    }catch {
+      return {
+        channelId,
+        description: "",
+        publishedAt: new Date(),
+        title,
+        thumbnail: "",
+        videos: [],
+      }
     }
-  }catch {
-    return {
-      channelId,
-      description: "",
-      title,
-      thumbnail: "",
-      publishedAt: new Date(),
-    }
-  }
-}));
+  }))
+};
+
 
 export default getYoutubers;
